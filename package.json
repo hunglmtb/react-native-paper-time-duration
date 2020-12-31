@@ -1,7 +1,7 @@
 {
-  "name": "react-native-paper-dates",
-  "version": "0.2.12",
-  "description": "Performant Date Picker for React Native Paper",
+  "name": "react-native-paper-time-duration",
+  "version": "0.2.12.1",
+  "description": "Time and duration Picker for React Native Paper",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
@@ -35,13 +35,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/web-ridge/react-native-paper-dates",
-  "author": "Richard Lindhout <info@webridge.nl> (https://github.com/web-ridge)",
+  "repository": "https://github.com/hunglmtb/",
+  "author": "hung le",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/web-ridge/react-native-paper-dates/issues"
+    "url": "https://github.com/hunglmtb/"
   },
-  "homepage": "https://github.com/web-ridge/react-native-paper-dates#readme",
+  "homepage": "https://github.com/hunglmtb/",
   "devDependencies": {
     "@commitlint/config-conventional": "^8.3.4",
     "@react-native-community/bob": "^0.16.2",
