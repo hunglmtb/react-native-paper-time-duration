@@ -15,10 +15,12 @@ import TimeInputs from './TimeInputs'
 type onChangeFunc = ({
   hours,
   minutes,
+  duration: number,
   focused,
 }: {
   hours: number
   minutes: number
+  duration?: number
   focused?: undefined | PossibleClockTypes
 }) => any
 
@@ -30,6 +32,7 @@ function TimePicker({
   inputType,
   onChange,
   locale,
+  duration,
 }: {
   locale?: undefined | string
   inputType: PossibleInputTypes
@@ -38,6 +41,7 @@ function TimePicker({
   minutes: number
   onFocusInput: (type: PossibleClockTypes) => any
   onChange: onChangeFunc
+  duration?: number
 }) {
   const dimensions = useWindowDimensions()
   const isLandscape = dimensions.width > dimensions.height
@@ -56,9 +60,10 @@ function TimePicker({
   const onInnerChange = React.useCallback<onChangeFunc>(
     (params) => {
       params.hours = toHourOutputFormat(params.hours, hours, is24Hour)
+      params.duration = duration || 0
       onChange(params)
     },
-    [onChange, hours, is24Hour]
+    [onChange, hours, is24Hour, duration]
   )
 
   return (
@@ -71,6 +76,7 @@ function TimePicker({
         onChange={onChange}
         onFocusInput={onFocusInput}
         focused={focused}
+        duration={duration}
       />
       {inputType === inputTypes.picker ? (
         <View style={styles.clockContainer}>

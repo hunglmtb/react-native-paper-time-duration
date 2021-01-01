@@ -42,10 +42,12 @@ function AnalogClock({
     hours,
     minutes,
     focused,
+    duration,
   }: {
     hours: number
     minutes: number
     focused?: undefined | PossibleClockTypes
+    duration?: number
   }) => any
 }) {
   const theme = useTheme()

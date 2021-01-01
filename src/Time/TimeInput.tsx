@@ -38,7 +38,7 @@ function TimeInput(
 
   const onInnerChange = (text: string) => {
     setControlledValue(text)
-    if (text !== '' && text !== '0') {
+    if (text !== '') {
       onChanged(Number(text))
     }
   }

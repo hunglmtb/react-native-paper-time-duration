@@ -1,6 +1,6 @@
 {
   "name": "react-native-paper-time-duration",
-  "version": "0.2.12.1",
+  "version": "0.2.1201",
   "description": "Time and duration Picker for React Native Paper",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -13,7 +13,7 @@
     "android",
     "ios",
     "cpp",
-    "react-native-paper-dates.podspec",
+    "react-native-paper-time-duration.podspec",
     "!lib/typescript/example",
     "!**/__tests__",
     "!**/__fixtures__",

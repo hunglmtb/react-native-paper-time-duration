@@ -39,6 +39,7 @@ export function TimePickerModal({
   confirmLabel = 'Ok',
   animationType = 'none',
   locale,
+  duration,
 }: {
   locale?: undefined | string
   label?: string
@@ -48,8 +49,17 @@ export function TimePickerModal({
   minutes?: number | undefined
   visible: boolean | undefined
   onDismiss: () => any
-  onConfirm: ({ hours, minutes }: { hours: number; minutes: number }) => any
+  onConfirm: ({
+    hours,
+    minutes,
+    duration,
+  }: {
+    hours: number
+    minutes: number
+    duration: number
+  }) => any
   animationType?: 'slide' | 'fade' | 'none'
+  duration?: number
 }) {
   const theme = useTheme()
 
@@ -63,6 +73,7 @@ export function TimePickerModal({
   const [localMinutes, setLocalMinutes] = React.useState<number>(
     getMinutes(minutes)
   )
+  const [localDuration, setLocalDuration] = React.useState<number>(0)
 
   React.useEffect(() => {
     setLocalHours(getHours(hours))
@@ -71,6 +82,10 @@ export function TimePickerModal({
   React.useEffect(() => {
     setLocalMinutes(getMinutes(minutes))
   }, [setLocalMinutes, minutes])
+
+  React.useEffect(() => {
+    setLocalDuration(duration || 0)
+  }, [setLocalDuration, duration])
 
   const onFocusInput = React.useCallback(
     (type: PossibleClockTypes) => setFocused(type),
@@ -81,6 +96,7 @@ export function TimePickerModal({
       focused?: PossibleClockTypes | undefined
       hours: number
       minutes: number
+      duration?: number
     }) => {
       if (params.focused) {
         setFocused(params.focused)
@@ -88,8 +104,9 @@ export function TimePickerModal({
 
       setLocalHours(params.hours)
       setLocalMinutes(params.minutes)
+      setLocalDuration(params.duration || 0)
     },
-    [setFocused, setLocalHours, setLocalMinutes]
+    [setFocused, setLocalHours, setLocalMinutes, setLocalDuration]
   )
   return (
     <Modal
@@ -146,6 +163,7 @@ export function TimePickerModal({
                   minutes={localMinutes}
                   onChange={onChange}
                   onFocusInput={onFocusInput}
+                  duration={duration}
                 />
               </View>
               <View style={styles.bottom}>
@@ -160,7 +178,11 @@ export function TimePickerModal({
                 <Button onPress={onDismiss}>{cancelLabel}</Button>
                 <Button
                   onPress={() =>
-                    onConfirm({ hours: localHours, minutes: localMinutes })
+                    onConfirm({
+                      hours: localHours,
+                      minutes: localMinutes,
+                      duration: localDuration,
+                    })
                   }
                 >
                   {confirmLabel}

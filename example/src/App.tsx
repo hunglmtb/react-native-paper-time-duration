@@ -29,7 +29,7 @@ import {
   DatePickerModalContent,
   TimePickerModal,
   // @ts-ignore
-} from 'react-native-paper-dates';
+} from 'react-native-paper-time-duration';
 import { addMonths } from '../../src/Date/dateUtils';
 
 const baseDate = new Date();
@@ -68,7 +68,8 @@ function App({
   const [time, setTime] = React.useState<{
     hours: number | undefined;
     minutes: number | undefined;
-  }>({ hours: undefined, minutes: undefined });
+    duration: number | undefined;
+  }>({ hours: undefined, minutes: undefined, duration: 128 });
   const [timeOpen, setTimeOpen] = React.useState(false);
   const [rangeOpen, setRangeOpen] = React.useState(false);
   const [rangeExcludeOpen, setRangeExcludeOpen] = React.useState(false);
@@ -120,9 +121,9 @@ function App({
   );
 
   const onConfirmTime = React.useCallback(
-    ({ hours, minutes }) => {
+    ({ hours, minutes, duration }) => {
       setTimeOpen(false);
-      setTime({ hours, minutes });
+      setTime({ hours, minutes, duration });
     },
     [setTimeOpen, setTime]
   );
@@ -222,9 +223,9 @@ function App({
             <Row>
               <Label>Time</Label>
               <Text>
-                {time && time.hours !== undefined && time.minutes !== undefined
+                {`${time && time.hours !== undefined && time.minutes !== undefined
                   ? timeFormatter.format(timeDate)
-                  : '-'}
+                  : '-'} duration: ${time && time.duration}`}
               </Text>
             </Row>
           </View>
@@ -347,6 +348,7 @@ function App({
         onConfirm={onConfirmTime}
         hours={time.hours} // optional, default: current hours
         minutes={time.minutes} // optional, default: current minutes
+        duration={time.duration}
         // label="Select time" // optional, default 'Select time'
         // cancelLabel="Cancel" // optional, default: 'Cancel'
         // confirmLabel="Ok" // optional, default: 'Ok'
