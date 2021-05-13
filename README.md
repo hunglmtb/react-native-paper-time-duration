@@ -2,7 +2,7 @@
 
 ```
 
-git checkout https://github.com/hunglmtb/react-native-paper-time-duration
+git clone https://github.com/hunglmtb/react-native-paper-time-duration
 
 cd react-native-paper-time-duration
 
