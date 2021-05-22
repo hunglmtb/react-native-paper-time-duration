@@ -26,6 +26,8 @@ import { useState } from 'react'
 function TimeInputs({
   hours,
   minutes,
+  endHours,
+  endMinutes,
   onFocusInput,
   focused,
   inputType,
@@ -37,15 +39,21 @@ function TimeInputs({
   focused: PossibleClockTypes
   hours: number
   minutes: number
+  endHours: number
+  endMinutes: number
   onFocusInput: (type: PossibleClockTypes) => any
   onChange: ({
     hours,
     minutes,
+    endHours,
+    endMinutes,
     duration,
     focused,
   }: {
     hours: number
     minutes: number
+    endHours?: number
+    endMinutes?: number
     duration?: number
     focused?: undefined | PossibleClockTypes
   }) => any
@@ -71,20 +79,50 @@ function TimeInputs({
 
   const [currentDuration, setCurrentDuration] = useState(duration)
   const minutesRef = useLatest(minutes)
+  const endMinutesRef = useLatest(endMinutes)
   const onChangeHours = React.useCallback(
     (newHours: number) => {
       onChange({
         hours: newHours,
         minutes: minutesRef.current,
         focused: clockTypes.hours,
+        endHours,
+        endMinutes: endMinutesRef.current,
       })
     },
     [onChange, minutesRef]
   )
 
+  const onChangeEndHours = React.useCallback(
+    (newEndHours: number) => {
+      onChange({
+        hours,
+        minutes: minutesRef.current,
+        focused: clockTypes.endHours,
+        endHours: newEndHours,
+        endMinutes: endMinutesRef.current,
+      })
+    },
+    [onChange, endMinutesRef]
+  )
+
   return (
     <View style={[styles.columnContainer]}>
-      {duration && duration >= 0 && (
+      {duration && duration >= 0 ? (
+        <View style={styles.labelContainer}>
+          <Text
+            selectable={false}
+            style={[
+              {
+                ...theme.fonts.medium,
+                color: color,
+              },
+            ]}
+          >
+            {`Bắt đầu lúc`}
+          </Text>
+        </View>
+      ) : (
         <View style={styles.labelContainer}>
           <Text
             selectable={false}
@@ -128,6 +166,8 @@ function TimeInputs({
             onChange({
               hours: newHours,
               minutes,
+              endHours,
+              endMinutes,
             })
           }}
           // onChangeText={onChangeStartInput}
@@ -156,6 +196,8 @@ function TimeInputs({
             onChange({
               hours,
               minutes: newMinutes,
+              endHours,
+              endMinutes,
             })
           }}
         />
@@ -166,7 +208,7 @@ function TimeInputs({
           </>
         )}
       </View>
-      {currentDuration !== undefined && (
+      {currentDuration !== undefined ? (
         <>
           <View style={styles.betweenDot} />
           <View style={styles.spaceBetweenInputsAndSwitcher} />
@@ -244,6 +286,93 @@ function TimeInputs({
                 })
               }}
             />
+          </View>
+        </>
+      ) : (
+        <>
+          <View style={styles.betweenDot} />
+          <View style={styles.labelContainer}>
+            <Text
+              selectable={false}
+              style={[
+                {
+                  ...theme.fonts.medium,
+                  color: color,
+                },
+              ]}
+            >
+              {`Kết thúc lúc`}
+            </Text>
+          </View>
+          <View
+            style={[
+              styles.inputContainer,
+              isLandscape && styles.inputContainerLandscape,
+            ]}
+          >
+            <TimeInput
+              placeholder={'00'}
+              value={toHourInputFormat(endHours, is24Hour)}
+              clockType={clockTypes.endHours}
+              pressed={focused === clockTypes.endHours}
+              onPress={onFocusInput}
+              inputType={inputType}
+              returnKeyType={'next'}
+              onSubmitEditing={onSubmitStartInput}
+              blurOnSubmit={false}
+              onChanged={(newHoursFromInput) => {
+                let newEndHours = toHourOutputFormat(
+                  newHoursFromInput,
+                  endHours,
+                  is24Hour
+                )
+                if (newHoursFromInput > 24) {
+                  newEndHours = 24
+                }
+                onChange({
+                  hours,
+                  minutes,
+                  endHours: newEndHours,
+                  endMinutes,
+                })
+              }}
+              // onChangeText={onChangeStartInput}
+            />
+            <View style={styles.hoursAndMinutesSeparator}>
+              <View style={styles.spaceDot} />
+              <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
+              <View style={styles.betweenDot} />
+              <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
+              <View style={styles.spaceDot} />
+            </View>
+            <TimeInput
+              ref={endInput}
+              placeholder={'00'}
+              value={endMinutes}
+              clockType={clockTypes.endMinutes}
+              pressed={focused === clockTypes.endMinutes}
+              onPress={onFocusInput}
+              inputType={inputType}
+              onSubmitEditing={onSubmitEndInput}
+              onChanged={(newEndMinutesFromInput) => {
+                let newEndMinutes = newEndMinutesFromInput
+                if (newEndMinutesFromInput > 60) {
+                  newEndMinutes = 60
+                }
+                onChange({
+                  hours,
+                  minutes,
+                  endMinutes: newEndMinutes,
+                  endHours,
+                })
+              }}
+            />
+            {!is24Hour && (
+              <>
+                <View style={styles.spaceBetweenInputsAndSwitcher} />
+                <AmPmSwitcher hours={endHours} onChange={onChangeEndHours} />
+              </>
+            )}
           </View>
         </>
       )}

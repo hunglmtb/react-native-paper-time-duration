@@ -28,6 +28,7 @@ import {
   DatePickerModal,
   DatePickerModalContent,
   TimePickerModal,
+  TimeKeyboardModal,
   // @ts-ignore
 } from 'react-native-paper-time-duration';
 import { addMonths } from '../../src/Date/dateUtils';
@@ -68,14 +69,21 @@ function App({
   const [time, setTime] = React.useState<{
     hours: number | undefined;
     minutes: number | undefined;
+    endHours: number | undefined;
+    endMinutes: number | undefined;
     duration: number | undefined;
-  }>({ hours: undefined, minutes: undefined, duration: 128 });
+  }>({ hours: undefined, minutes: undefined, endHours: undefined, endMinutes: undefined, duration: 128 });
+  const [timeKeyboard, setTimeKeyboard] = React.useState<{
+    afterSecond: number | undefined;
+    duration?: number | undefined;
+  }>({ afterSecond: 0, duration: 128 });
   const [timeOpen, setTimeOpen] = React.useState(false);
   const [rangeOpen, setRangeOpen] = React.useState(false);
   const [rangeExcludeOpen, setRangeExcludeOpen] = React.useState(false);
 
   const [singleOpen, setSingleOpen] = React.useState(false);
   const [customOpen, setCustomOpen] = React.useState(false);
+  const [timeKeyboardOpen, setTimeKeyboardOpen] = React.useState(false);
   const onDismissTime = React.useCallback(() => {
     setTimeOpen(false);
   }, [setTimeOpen]);
@@ -95,6 +103,10 @@ function App({
   const onDismissCustom = React.useCallback(() => {
     setCustomOpen(false);
   }, [setCustomOpen]);
+
+  const onDismissKeyboad = React.useCallback(() => {
+    setTimeKeyboardOpen(false);
+  }, [timeKeyboardOpen]);
 
   const onChangeRange = React.useCallback(
     ({ startDate, endDate }) => {
@@ -121,17 +133,31 @@ function App({
   );
 
   const onConfirmTime = React.useCallback(
-    ({ hours, minutes, duration }) => {
+    ({ hours, minutes, endHours, endMinutes, duration }) => {
       setTimeOpen(false);
-      setTime({ hours, minutes, duration });
+      setTime({ hours, minutes, endHours, endMinutes, duration });
     },
     [setTimeOpen, setTime]
   );
 
+  const onConfirmTimeKeyboard = React.useCallback(
+    ({ afterSecond, duration }) => {
+      setTimeKeyboardOpen(false);
+      setTimeKeyboard({ afterSecond, duration });
+    },
+    [setTimeKeyboardOpen, setTimeKeyboard]
+  );
+
   // generate date from time
   let timeDate = new Date();
-  time.hours !== undefined && timeDate.setHours(time.hours);
-  time.minutes !== undefined && timeDate.setMinutes(time.minutes);
+  if (time.hours !== undefined) {
+    time.hours !== undefined && timeDate.setHours(time.hours);
+  }
+  if (time.minutes !== undefined) {
+    time.minutes !== undefined && timeDate.setMinutes(time.minutes);
+  }
+  // time.endHours !== undefined && timeDate.setHours(time.endHours);
+  // time.endMinutes !== undefined && timeDate.setMinutes(time.endMinutes);
 
   const backgroundColor =
     theme.dark && theme.mode === 'adaptive'
@@ -221,11 +247,15 @@ function App({
               </Text>
             </Row>
             <Row>
-              <Label>Time</Label>
+              <Label>Start time</Label>
               <Text>
                 {`${time && time.hours !== undefined && time.minutes !== undefined
                   ? timeFormatter.format(timeDate)
                   : '-'} duration: ${time && time.duration}`}
+              </Text>
+              <Label>Test</Label>
+              <Text>
+                {`afterSecond: ${timeKeyboard && timeKeyboard.afterSecond} --- duration: ${timeKeyboard && timeKeyboard.duration}`}
               </Text>
             </Row>
           </View>
@@ -277,6 +307,15 @@ function App({
               Custom modal
             </Button>
           </View>
+          <View style={styles.buttonSeparator} />
+            <Button
+              onPress={() => setTimeKeyboardOpen(true)}
+              uppercase={false}
+              mode="outlined"
+              style={styles.pickButton}
+            >
+              KeyboadModal
+            </Button>
           <Enter />
         </Animated.View>
 
@@ -348,11 +387,22 @@ function App({
         onConfirm={onConfirmTime}
         hours={time.hours} // optional, default: current hours
         minutes={time.minutes} // optional, default: current minutes
-        duration={time.duration}
+        endHours={time.endHours}
+        endMinutes={time.endMinutes}
+        // duration={time.duration}
         // label="Select time" // optional, default 'Select time'
         // cancelLabel="Cancel" // optional, default: 'Cancel'
         // confirmLabel="Ok" // optional, default: 'Ok'
         // animationType="fade" // optional, default is 'none'
+      />
+
+      <TimeKeyboardModal
+        locale={'nl'} //optional, default: automatic
+        visible={timeKeyboardOpen}
+        onDismiss={onDismissKeyboad}
+        onConfirm={onConfirmTimeKeyboard}
+        duration={timeKeyboard.duration}
+        afterSecond={timeKeyboard.afterSecond}
       />
     </>
   );
