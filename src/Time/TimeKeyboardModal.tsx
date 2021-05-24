@@ -11,11 +11,7 @@ import {
 
 import { Button, overlay, useTheme } from 'react-native-paper'
 import TimeKeyboard from './TimeKeyboard'
-import {
-  clockTypes,
-  inputTypes,
-  PossibleClockTypes,
-} from './timeUtils'
+import { clockTypes, inputTypes, PossibleClockTypes } from './timeUtils'
 
 const supportedOrientations: any[] = [
   'portrait',
@@ -60,7 +56,7 @@ export function TimeKeyboardModal({
 }) {
   const theme = useTheme()
 
-  const [inputType, ] = React.useState(inputTypes.picker)
+  const [inputType] = React.useState(inputTypes.picker)
 
   const [focused, setFocused] = React.useState<PossibleClockTypes>(
     clockTypes.hours
@@ -81,10 +77,7 @@ export function TimeKeyboardModal({
     []
   )
   const onChange = React.useCallback(
-    (params: {
-      duration?: number
-      afterSecond?: number
-    }) => {
+    (params: { duration?: number; afterSecond?: number }) => {
       setLocalDuration(params.duration || 0)
       setLocalAfterSecond(params.afterSecond || 0)
     },

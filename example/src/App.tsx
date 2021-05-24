@@ -72,7 +72,13 @@ function App({
     endHours: number | undefined;
     endMinutes: number | undefined;
     duration: number | undefined;
-  }>({ hours: undefined, minutes: undefined, endHours: undefined, endMinutes: undefined, duration: 128 });
+  }>({
+    hours: undefined,
+    minutes: undefined,
+    endHours: undefined,
+    endMinutes: undefined,
+    duration: 128,
+  });
   const [timeKeyboard, setTimeKeyboard] = React.useState<{
     afterSecond: number | undefined;
     duration?: number | undefined;
@@ -106,7 +112,7 @@ function App({
 
   const onDismissKeyboad = React.useCallback(() => {
     setTimeKeyboardOpen(false);
-  }, [timeKeyboardOpen]);
+  }, []);
 
   const onChangeRange = React.useCallback(
     ({ startDate, endDate }) => {
@@ -249,13 +255,17 @@ function App({
             <Row>
               <Label>Start time</Label>
               <Text>
-                {`${time && time.hours !== undefined && time.minutes !== undefined
-                  ? timeFormatter.format(timeDate)
-                  : '-'} duration: ${time && time.duration}`}
+                {`${
+                  time && time.hours !== undefined && time.minutes !== undefined
+                    ? timeFormatter.format(timeDate)
+                    : '-'
+                } duration: ${time && time.duration}`}
               </Text>
               <Label>Test</Label>
               <Text>
-                {`afterSecond: ${timeKeyboard && timeKeyboard.afterSecond} --- duration: ${timeKeyboard && timeKeyboard.duration}`}
+                {`afterSecond: ${
+                  timeKeyboard && timeKeyboard.afterSecond
+                } --- duration: ${timeKeyboard && timeKeyboard.duration}`}
               </Text>
             </Row>
           </View>
@@ -308,14 +318,14 @@ function App({
             </Button>
           </View>
           <View style={styles.buttonSeparator} />
-            <Button
-              onPress={() => setTimeKeyboardOpen(true)}
-              uppercase={false}
-              mode="outlined"
-              style={styles.pickButton}
-            >
-              KeyboadModal
-            </Button>
+          <Button
+            onPress={() => setTimeKeyboardOpen(true)}
+            uppercase={false}
+            mode="outlined"
+            style={styles.pickButton}
+          >
+            KeyboadModal
+          </Button>
           <Enter />
         </Animated.View>
 

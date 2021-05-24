@@ -1,10 +1,7 @@
 import * as React from 'react'
 import { View, StyleSheet, useWindowDimensions } from 'react-native'
 
-import {
-  PossibleClockTypes,
-  PossibleInputTypes,
-} from './timeUtils'
+import { PossibleClockTypes, PossibleInputTypes } from './timeUtils'
 
 import { circleSize } from './AnalogClock'
 import TimeKeyboardInput from './TimeKeyboardInput'

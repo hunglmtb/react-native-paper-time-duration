@@ -61,7 +61,10 @@ function AnalogClock({
   const theme = useTheme()
 
   // used to make pointer shorter if hours are selected and above 12
-  const shortPointer = ((focused === clockTypes.hours ? hours : endHours) === 0 || (focused === clockTypes.hours ? hours : endHours) > 12) && is24Hour
+  const shortPointer =
+    ((focused === clockTypes.hours ? hours : endHours) === 0 ||
+      (focused === clockTypes.hours ? hours : endHours) > 12) &&
+    is24Hour
 
   const clockRef = React.useRef<View | null>(null)
 
@@ -160,7 +163,15 @@ function AnalogClock({
         }
       }
     },
-    [focusedRef, is24HourRef, hoursRef, onChangeRef, minutesRef, endHoursRef, endMinutesRef]
+    [
+      focusedRef,
+      is24HourRef,
+      hoursRef,
+      onChangeRef,
+      minutesRef,
+      endHoursRef,
+      endMinutesRef,
+    ]
   )
 
   const panResponder = React.useRef(
@@ -178,13 +189,23 @@ function AnalogClock({
     })
   ).current
 
-  const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : focused === clockTypes.endHours && shortPointer ? 33 : 0
-  const pointerNumber = focused === clockTypes.hours ?
-    hours : focused === clockTypes.endHours ?
-    endHours : focused === clockTypes.minutes ?
-    minutes : endMinutes
+  const dynamicSize =
+    focused === clockTypes.hours && shortPointer
+      ? 33
+      : focused === clockTypes.endHours && shortPointer
+      ? 33
+      : 0
+  const pointerNumber =
+    focused === clockTypes.hours
+      ? hours
+      : focused === clockTypes.endHours
+      ? endHours
+      : focused === clockTypes.minutes
+      ? minutes
+      : endMinutes
 
-  const degreesPerNumber = focused === clockTypes.hours ? 30 : focused === clockTypes.endHours ? 30 : 6
+  const degreesPerNumber =
+    focused === clockTypes.hours ? 30 : focused === clockTypes.endHours ? 30 : 6
 
   const selectedHours = focused === clockTypes.hours ? hours : endHours
   const selectedMinutes = focused === clockTypes.minutes ? minutes : endMinutes

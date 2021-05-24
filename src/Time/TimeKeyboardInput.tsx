@@ -2,11 +2,7 @@
 // WORK IN PROGRESS
 
 import * as React from 'react'
-import {
-  View,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native'
+import { View, StyleSheet, useWindowDimensions } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
 
 import {
@@ -44,8 +40,12 @@ function TimeKeyboardInput({
   const theme = useTheme()
   const { color } = useSwitchColors(true)
 
-  const [currentAfterSecond, setCurrentAfterSecond] = useState<number | undefined>(afterSecond)
-  const [currentDuration, setCurrentDuration] = useState<number | undefined>(duration)
+  const [currentAfterSecond, setCurrentAfterSecond] = useState<
+    number | undefined
+  >(afterSecond)
+  const [currentDuration, setCurrentDuration] = useState<number | undefined>(
+    duration
+  )
 
   return (
     <View style={[styles.inputContainer]}>

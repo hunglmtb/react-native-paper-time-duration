@@ -90,7 +90,7 @@ function TimeInputs({
         endMinutes: endMinutesRef.current,
       })
     },
-    [onChange, minutesRef]
+    [endHours, endMinutesRef, onChange, minutesRef]
   )
 
   const onChangeEndHours = React.useCallback(
@@ -103,8 +103,36 @@ function TimeInputs({
         endMinutes: endMinutesRef.current,
       })
     },
-    [onChange, endMinutesRef]
+    [onChange, endMinutesRef, minutesRef, hours]
   )
+
+  React.useEffect(() => {
+    let newMinutes: number = minutes
+    let newEndHours: number = endHours
+    let newEndMinutes: number = endMinutes
+    if (hours === newEndHours && minutes === newEndMinutes) {
+      newEndMinutes = newMinutes + 1
+    }
+    if (hours === newEndHours && minutes > newEndMinutes) {
+      newEndMinutes = newMinutes + 1
+    }
+    if (hours === 23 && newEndHours === 23 && newMinutes > 58) {
+      newMinutes = 58
+    }
+    if ((hours === 23 && newEndHours === 0) || hours > newEndHours) {
+      newEndHours = hours
+    }
+    if (newEndMinutes > 59) {
+      newEndMinutes = 59
+    }
+    console.log(hours)
+    onChange({
+      hours,
+      minutes: newMinutes,
+      endHours: newEndHours,
+      endMinutes: newEndMinutes,
+    })
+  }, [onChange, hours, minutes, endHours, endMinutes])
 
   return (
     <View style={[styles.columnContainer]}>
@@ -160,8 +188,8 @@ function TimeInputs({
               hours,
               is24Hour
             )
-            if (newHoursFromInput > 24) {
-              newHours = 24
+            if (newHoursFromInput > 23 || endHours > 23) {
+              newHours = 0
             }
             onChange({
               hours: newHours,
@@ -190,8 +218,8 @@ function TimeInputs({
           onSubmitEditing={onSubmitEndInput}
           onChanged={(newMinutesFromInput) => {
             let newMinutes = newMinutesFromInput
-            if (newMinutesFromInput > 60) {
-              newMinutes = 60
+            if (newMinutesFromInput > 59 || endMinutes > 59) {
+              newMinutes = 59
             }
             onChange({
               hours,
@@ -273,7 +301,7 @@ function TimeInputs({
               inputType={inputType}
               // onSubmitEditing={onSubmitEndInput}
               onChanged={(newSecondFromInput) => {
-                if (newSecondFromInput > 60) {
+                if (newSecondFromInput > 59) {
                   newSecondFromInput = 59
                 }
                 const newDuration =
@@ -320,14 +348,14 @@ function TimeInputs({
               returnKeyType={'next'}
               onSubmitEditing={onSubmitStartInput}
               blurOnSubmit={false}
-              onChanged={(newHoursFromInput) => {
+              onChanged={(newEndHoursFromInput) => {
                 let newEndHours = toHourOutputFormat(
-                  newHoursFromInput,
+                  newEndHoursFromInput,
                   endHours,
                   is24Hour
                 )
-                if (newHoursFromInput > 24) {
-                  newEndHours = 24
+                if (newEndHoursFromInput > 23 || hours > 23) {
+                  newEndHours = 0
                 }
                 onChange({
                   hours,
@@ -340,9 +368,13 @@ function TimeInputs({
             />
             <View style={styles.hoursAndMinutesSeparator}>
               <View style={styles.spaceDot} />
-              <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
+              <View
+                style={[styles.dot, { backgroundColor: theme.colors.text }]}
+              />
               <View style={styles.betweenDot} />
-              <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
+              <View
+                style={[styles.dot, { backgroundColor: theme.colors.text }]}
+              />
               <View style={styles.spaceDot} />
             </View>
             <TimeInput
@@ -356,8 +388,8 @@ function TimeInputs({
               onSubmitEditing={onSubmitEndInput}
               onChanged={(newEndMinutesFromInput) => {
                 let newEndMinutes = newEndMinutesFromInput
-                if (newEndMinutesFromInput > 60) {
-                  newEndMinutes = 60
+                if (newEndMinutesFromInput > 59 || newEndMinutes > 59) {
+                  newEndMinutes = 59
                 }
                 onChange({
                   hours,

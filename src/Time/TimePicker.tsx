@@ -69,12 +69,16 @@ function TimePicker({
     (params) => {
       params.hours = toHourOutputFormat(params.hours, hours, is24Hour)
       if (params.endHours && params.endHours >= 0) {
-        params.endHours = toHourOutputFormat(params.endHours, endHours, is24Hour)
+        params.endHours = toHourOutputFormat(
+          params.endHours,
+          endHours,
+          is24Hour
+        )
       }
       params.duration = duration || 0
       onChange(params)
     },
-    [onChange, hours, is24Hour, duration]
+    [onChange, hours, is24Hour, duration, endHours]
   )
 
   return (

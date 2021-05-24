@@ -81,7 +81,9 @@ export function TimePickerModal({
   const [localMinutes, setLocalMinutes] = React.useState<number>(
     getMinutes(minutes)
   )
-  const [localEndHours, setLocalEndHours] = React.useState<number>(getHours(endHours))
+  const [localEndHours, setLocalEndHours] = React.useState<number>(
+    getHours(endHours)
+  )
   const [localEndMinutes, setLocalEndMinutes] = React.useState<number>(
     getMinutes(endMinutes)
   )
