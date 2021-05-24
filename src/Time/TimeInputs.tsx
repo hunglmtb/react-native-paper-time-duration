@@ -116,7 +116,7 @@ function TimeInputs({
     if (hours === newEndHours && minutes > newEndMinutes) {
       newEndMinutes = newMinutes + 1
     }
-    if (hours === 23 && newEndHours === 23 && newMinutes > 58) {
+    if (hours === newEndHours && newMinutes > 58) {
       newMinutes = 58
     }
     if ((hours === 23 && newEndHours === 0) || hours > newEndHours) {
