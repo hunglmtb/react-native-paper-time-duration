@@ -125,7 +125,6 @@ function TimeInputs({
     if (newEndMinutes > 59) {
       newEndMinutes = 59
     }
-    console.log(hours)
     onChange({
       hours,
       minutes: newMinutes,
