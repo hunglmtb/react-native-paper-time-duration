@@ -9,16 +9,9 @@ import {
   KeyboardAvoidingView,
 } from 'react-native'
 
-import { Button, IconButton, overlay, useTheme } from 'react-native-paper'
-import TimePicker from './TimePicker'
-import {
-  clockTypes,
-  inputTypeIcons,
-  inputTypes,
-  PossibleClockTypes,
-  PossibleInputTypes,
-  reverseInputTypes,
-} from './timeUtils'
+import { Button, overlay, useTheme } from 'react-native-paper'
+import TimeKeyboard from './TimeKeyboard'
+import { clockTypes, inputTypes, PossibleClockTypes } from './timeUtils'
 
 const supportedOrientations: any[] = [
   'portrait',
@@ -28,20 +21,18 @@ const supportedOrientations: any[] = [
   'landscape-right',
 ]
 
-export function TimePickerModal({
+export function TimeKeyboardModal({
   visible,
   onDismiss,
   onConfirm,
-  hours,
-  minutes,
-  endHours,
-  endMinutes,
   label = 'Select time',
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   animationType = 'none',
   locale,
   duration,
+  afterSecond,
+  maxLength,
 }: {
   locale?: undefined | string
   label?: string
@@ -49,91 +40,50 @@ export function TimePickerModal({
   confirmLabel?: string
   hours?: number | undefined
   minutes?: number | undefined
-  endHours?: number | undefined
-  endMinutes?: number | undefined
   visible: boolean | undefined
   onDismiss: () => any
   onConfirm: ({
-    hours,
-    minutes,
-    endHours,
-    endMinutes,
+    afterSecond,
     duration,
   }: {
-    hours: number
-    minutes: number
-    endHours: number
-    endMinutes: number
+    afterSecond: number
     duration: number
   }) => any
   animationType?: 'slide' | 'fade' | 'none'
-  duration?: number
+  duration?: number | undefined
+  afterSecond?: number
+  maxLength?: number
 }) {
   const theme = useTheme()
 
-  const [inputType, setInputType] = React.useState<PossibleInputTypes>(
-    inputTypes.picker
-  )
+  const [inputType] = React.useState(inputTypes.picker)
+
   const [focused, setFocused] = React.useState<PossibleClockTypes>(
     clockTypes.hours
   )
-  const [localHours, setLocalHours] = React.useState<number>(getHours(hours))
-  const [localMinutes, setLocalMinutes] = React.useState<number>(
-    getMinutes(minutes)
-  )
-  const [localEndHours, setLocalEndHours] = React.useState<number>(
-    getHours(endHours)
-  )
-  const [localEndMinutes, setLocalEndMinutes] = React.useState<number>(
-    getMinutes(endMinutes)
-  )
   const [localDuration, setLocalDuration] = React.useState<number>(0)
-
-  React.useEffect(() => {
-    setLocalHours(getHours(hours))
-  }, [setLocalHours, hours])
-
-  React.useEffect(() => {
-    setLocalMinutes(getMinutes(minutes))
-  }, [setLocalMinutes, minutes])
-
-  React.useEffect(() => {
-    setLocalEndHours(getHours(endHours))
-  }, [setLocalEndHours, endHours])
-
-  React.useEffect(() => {
-    setLocalEndMinutes(getMinutes(endMinutes))
-  }, [setLocalEndMinutes, endMinutes])
+  const [localAfterSecond, setLocalAfterSecond] = React.useState<number>(0)
 
   React.useEffect(() => {
     setLocalDuration(duration || 0)
   }, [setLocalDuration, duration])
+
+  React.useEffect(() => {
+    setLocalAfterSecond(afterSecond || 0)
+  }, [setLocalAfterSecond, afterSecond])
 
   const onFocusInput = React.useCallback(
     (type: PossibleClockTypes) => setFocused(type),
     []
   )
   const onChange = React.useCallback(
-    (params: {
-      focused?: PossibleClockTypes | undefined
-      hours: number
-      minutes: number
-      endHours?: number
-      endMinutes?: number
-      duration?: number
-    }) => {
-      if (params.focused) {
-        setFocused(params.focused)
-      }
-
-      setLocalHours(params.hours)
-      setLocalMinutes(params.minutes)
-      setLocalEndHours(params.endHours || 0)
-      setLocalEndMinutes(params.endMinutes || 0)
+    (params: { duration?: number; afterSecond?: number }) => {
       setLocalDuration(params.duration || 0)
+      setLocalAfterSecond(params.afterSecond || 0)
     },
-    [setFocused, setLocalHours, setLocalMinutes, setLocalDuration]
+    [setLocalDuration, setLocalAfterSecond]
   )
+
   return (
     <Modal
       animationType={animationType}
@@ -181,36 +131,24 @@ export function TimePickerModal({
                 </Text>
               </View>
               <View style={styles.timePickerContainer}>
-                <TimePicker
+                <TimeKeyboard
                   locale={locale}
                   inputType={inputType}
                   focused={focused}
-                  hours={localHours}
-                  minutes={localMinutes}
-                  endHours={localEndHours}
-                  endMinutes={localEndMinutes}
                   onChange={onChange}
                   onFocusInput={onFocusInput}
                   duration={duration}
+                  afterSecond={afterSecond}
+                  maxLength={maxLength}
                 />
               </View>
               <View style={styles.bottom}>
-                <IconButton
-                  icon={inputTypeIcons[reverseInputTypes[inputType]]}
-                  onPress={() => setInputType(reverseInputTypes[inputType])}
-                  size={24}
-                  style={styles.inputTypeToggle}
-                  accessibilityLabel="toggle keyboard"
-                />
                 <View style={styles.fill} />
                 <Button onPress={onDismiss}>{cancelLabel}</Button>
                 <Button
                   onPress={() =>
                     onConfirm({
-                      hours: localHours,
-                      minutes: localMinutes,
-                      endHours: localEndHours,
-                      endMinutes: localEndMinutes,
+                      afterSecond: localAfterSecond,
                       duration: localDuration,
                     })
                   }
@@ -224,15 +162,6 @@ export function TimePickerModal({
       </>
     </Modal>
   )
-}
-
-function getMinutes(minutes: number | undefined | null): number {
-  return minutes === undefined || minutes === null
-    ? new Date().getMinutes()
-    : minutes
-}
-function getHours(hours: number | undefined | null): number {
-  return hours === undefined || hours === null ? new Date().getHours() : hours
 }
 
 const styles = StyleSheet.create({
@@ -280,4 +209,4 @@ const styles = StyleSheet.create({
   fill: { flex: 1 },
 })
 
-export default React.memo(TimePickerModal)
+export default React.memo(TimeKeyboardModal)

@@ -11,7 +11,10 @@ export default function AnimatedClockSwitcher({
   hours: any
   minutes: any
 }) {
-  const collapsed = focused === clockTypes.hours
+  const collapsed =
+    focused === clockTypes.hours
+      ? focused === clockTypes.hours
+      : focused === clockTypes.endHours
   const animatedCollapsed = React.useRef<Animated.Value>(
     new Animated.Value(collapsed ? 1 : 0)
   )

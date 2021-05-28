@@ -30,22 +30,30 @@ export const circleSize = 215
 function AnalogClock({
   hours,
   minutes,
+  endHours,
+  endMinutes,
   focused,
   is24Hour,
   onChange,
 }: {
   hours: number
   minutes: number
+  endHours: number
+  endMinutes: number
   focused: PossibleClockTypes
   is24Hour: boolean
   onChange: ({
     hours,
     minutes,
     focused,
+    endHours,
+    endMinutes,
     duration,
   }: {
     hours: number
     minutes: number
+    endHours?: number
+    endMinutes?: number
     focused?: undefined | PossibleClockTypes
     duration?: number
   }) => any
@@ -53,15 +61,20 @@ function AnalogClock({
   const theme = useTheme()
 
   // used to make pointer shorter if hours are selected and above 12
-  const shortPointer = (hours === 0 || hours > 12) && is24Hour
+  const shortPointer =
+    ((focused === clockTypes.hours ? hours : endHours) === 0 ||
+      (focused === clockTypes.hours ? hours : endHours) > 12) &&
+    is24Hour
 
   const clockRef = React.useRef<View | null>(null)
 
   // Hooks are nice, sometimes... :-)..
   // We need the latest values, since the onPointerMove uses a closure to the function
   const hoursRef = useLatest(hours)
+  const endHoursRef = useLatest(endHours)
   const onChangeRef = useLatest(onChange)
   const minutesRef = useLatest(minutes)
+  const endMinutesRef = useLatest(endMinutes)
   const focusedRef = useLatest(focused)
   const is24HourRef = useLatest(is24Hour)
 
@@ -94,6 +107,8 @@ function AnalogClock({
           onChangeRef.current({
             hours: pickedHours,
             minutes: minutesRef.current,
+            endHours: endHoursRef.current,
+            endMinutes: endMinutesRef.current,
             focused: final ? clockTypes.minutes : undefined,
           })
         }
@@ -103,11 +118,60 @@ function AnalogClock({
           onChangeRef.current({
             hours: hoursRef.current,
             minutes: pickedMinutes,
+            endHours: endHoursRef.current,
+            endMinutes: endMinutesRef.current,
+          })
+        }
+      }
+
+      if (focusedRef.current === clockTypes.endHours) {
+        let hours24 = is24HourRef.current
+        let previousHourType = getHourType(endHoursRef.current)
+        let pickedHours = getHours(angle, previousHourType)
+
+        let hourTypeFromOffset = getHourTypeFromOffset(x, y, circleSize)
+        let hours24AndPM = hours24 && hourTypeFromOffset === hourTypes.pm
+        let hours12AndPm = !hours24 && previousHourType === hourTypes.pm
+
+        // TODO: check which mode is switched on am/pm
+        if (hours12AndPm || hours24AndPM) {
+          pickedHours += 12
+        }
+
+        if (pickedHours === 24) {
+          pickedHours = 0
+        }
+
+        if (endHoursRef.current !== pickedHours || final) {
+          onChangeRef.current({
+            hours: hoursRef.current,
+            minutes: minutesRef.current,
+            endHours: pickedHours,
+            endMinutes: endMinutesRef.current,
+            focused: final ? clockTypes.endMinutes : undefined,
+          })
+        }
+      } else if (focusedRef.current === clockTypes.endMinutes) {
+        let pickedMinutes = getMinutes(angle)
+        if (minutesRef.current !== pickedMinutes) {
+          onChangeRef.current({
+            hours: hoursRef.current,
+            minutes: minutesRef.current,
+            endHours: endHoursRef.current,
+            endMinutes: pickedMinutes,
           })
         }
       }
     },
-    [focusedRef, is24HourRef, hoursRef, onChangeRef, minutesRef]
+    [
+      focusedRef,
+      is24HourRef,
+      hoursRef,
+      onChangeRef,
+      minutesRef,
+      endHoursRef,
+      endMinutesRef,
+    ]
   )
 
   const panResponder = React.useRef(
@@ -125,9 +189,27 @@ function AnalogClock({
     })
   ).current
 
-  const dynamicSize = focused === clockTypes.hours && shortPointer ? 33 : 0
-  const pointerNumber = focused === clockTypes.hours ? hours : minutes
-  const degreesPerNumber = focused === clockTypes.hours ? 30 : 6
+  const dynamicSize =
+    focused === clockTypes.hours && shortPointer
+      ? 33
+      : focused === clockTypes.endHours && shortPointer
+      ? 33
+      : 0
+  const pointerNumber =
+    focused === clockTypes.hours
+      ? hours
+      : focused === clockTypes.endHours
+      ? endHours
+      : focused === clockTypes.minutes
+      ? minutes
+      : endMinutes
+
+  const degreesPerNumber =
+    focused === clockTypes.hours ? 30 : focused === clockTypes.endHours ? 30 : 6
+
+  const selectedHours = focused === clockTypes.hours ? hours : endHours
+  const selectedMinutes = focused === clockTypes.minutes ? minutes : endMinutes
+
   return (
     <View
       ref={clockRef}
@@ -178,8 +260,8 @@ function AnalogClock({
       </View>
       <AnimatedClockSwitcher
         focused={focused}
-        hours={<AnalogClockHours is24Hour={is24Hour} hours={hours} />}
-        minutes={<AnalogClockMinutes minutes={minutes} />}
+        hours={<AnalogClockHours is24Hour={is24Hour} hours={selectedHours} />}
+        minutes={<AnalogClockMinutes minutes={selectedMinutes} />}
       />
     </View>
   )
