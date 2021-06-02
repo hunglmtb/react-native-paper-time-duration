@@ -89,7 +89,6 @@ function TimeInput(
             StyleSheet.absoluteFill,
             styles.buttonOverlay,
             {
-              // backgroundColor: 'blue',
               borderRadius: theme.roundness,
             },
           ]}

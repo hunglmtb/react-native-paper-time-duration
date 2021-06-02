@@ -135,35 +135,19 @@ function TimeInputs({
 
   return (
     <View style={[styles.columnContainer]}>
-      {duration && duration >= 0 ? (
-        <View style={styles.labelContainer}>
-          <Text
-            selectable={false}
-            style={[
-              {
-                ...theme.fonts.medium,
-                color: color,
-              },
-            ]}
-          >
-            {`Bắt đầu lúc`}
-          </Text>
-        </View>
-      ) : (
-        <View style={styles.labelContainer}>
-          <Text
-            selectable={false}
-            style={[
-              {
-                ...theme.fonts.medium,
-                color: color,
-              },
-            ]}
-          >
-            {`Bắt đầu lúc`}
-          </Text>
-        </View>
-      )}
+      <View style={styles.labelContainer}>
+        <Text
+          selectable={false}
+          style={[
+            {
+              ...theme.fonts.medium,
+              color: color,
+            },
+          ]}
+        >
+          {`Bắt đầu`}
+        </Text>
+      </View>
       <View
         style={[
           styles.inputContainer,
@@ -197,7 +181,6 @@ function TimeInputs({
               endMinutes,
             })
           }}
-          // onChangeText={onChangeStartInput}
         />
         <View style={styles.hoursAndMinutesSeparator}>
           <View style={styles.spaceDot} />
@@ -228,12 +211,12 @@ function TimeInputs({
             })
           }}
         />
-        {!is24Hour && (
+        {!is24Hour ? (
           <>
             <View style={styles.spaceBetweenInputsAndSwitcher} />
             <AmPmSwitcher hours={hours} onChange={onChangeHours} />
           </>
-        )}
+        ) : null}
       </View>
       {currentDuration !== undefined ? (
         <>
@@ -328,7 +311,7 @@ function TimeInputs({
                 },
               ]}
             >
-              {`Kết thúc lúc`}
+              {`Kết thúc`}
             </Text>
           </View>
           <View
@@ -363,7 +346,6 @@ function TimeInputs({
                   endMinutes,
                 })
               }}
-              // onChangeText={onChangeStartInput}
             />
             <View style={styles.hoursAndMinutesSeparator}>
               <View style={styles.spaceDot} />
@@ -398,12 +380,12 @@ function TimeInputs({
                 })
               }}
             />
-            {!is24Hour && (
+            {!is24Hour ? (
               <>
                 <View style={styles.spaceBetweenInputsAndSwitcher} />
                 <AmPmSwitcher hours={endHours} onChange={onChangeEndHours} />
               </>
-            )}
+            ) : null}
           </View>
         </>
       )}
