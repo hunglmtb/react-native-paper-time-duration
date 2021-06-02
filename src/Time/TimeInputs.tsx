@@ -130,8 +130,9 @@ function TimeInputs({
       minutes: newMinutes,
       endHours: newEndHours,
       endMinutes: newEndMinutes,
+      duration,
     })
-  }, [onChange, hours, minutes, endHours, endMinutes])
+  }, [onChange, hours, minutes, endHours, endMinutes, duration])
 
   return (
     <View style={[styles.columnContainer]}>
@@ -179,6 +180,7 @@ function TimeInputs({
               minutes,
               endHours,
               endMinutes,
+              duration,
             })
           }}
         />
@@ -208,6 +210,7 @@ function TimeInputs({
               minutes: newMinutes,
               endHours,
               endMinutes,
+              duration,
             })
           }}
         />
@@ -258,6 +261,8 @@ function TimeInputs({
                 onChange({
                   hours,
                   minutes,
+                  endHours,
+                  endMinutes,
                   duration: newDuration,
                 })
               }}
@@ -292,6 +297,8 @@ function TimeInputs({
                 onChange({
                   hours,
                   minutes,
+                  endHours,
+                  endMinutes,
                   duration: newDuration,
                 })
               }}
@@ -344,6 +351,7 @@ function TimeInputs({
                   minutes,
                   endHours: newEndHours,
                   endMinutes,
+                  duration,
                 })
               }}
             />
@@ -377,6 +385,7 @@ function TimeInputs({
                   minutes,
                   endMinutes: newEndMinutes,
                   endHours,
+                  duration,
                 })
               }}
             />
