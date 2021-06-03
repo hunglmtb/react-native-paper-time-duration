@@ -40,70 +40,68 @@ function TimeKeyboardInput({
   const theme = useTheme()
   const { color } = useSwitchColors(true)
 
-  const [currentAfterSecond, setCurrentAfterSecond] = useState<
-    number | undefined
-  >(afterSecond)
-  const [currentDuration, setCurrentDuration] = useState<number | undefined>(
-    duration
-  )
+  const [currentAfterSecond, setCurrentAfterSecond] = useState<number | undefined>(afterSecond)
+  const [currentDuration, setCurrentDuration] = useState<number | undefined>(duration)
 
   return (
     <View style={[styles.inputContainer]}>
-      <View>
-        <View
-          style={[
-            styles.labelContainer,
-            isLandscape && styles.inputContainerLandscape,
-          ]}
-        >
-          <Text
-            selectable={false}
+      {afterSecond !== undefined ? (
+        <View>
+          <View
             style={[
-              styles.textCenter,
-              {
-                ...theme.fonts.medium,
-                color: color,
-              },
+              styles.labelContainer,
+              isLandscape && styles.inputContainerLandscape,
             ]}
           >
-            {`Sau`}
-          </Text>
+            <Text
+              selectable={false}
+              style={[
+                styles.textCenter,
+                {
+                  ...theme.fonts.medium,
+                  color: color,
+                },
+              ]}
+            >
+              {`Sau`}
+            </Text>
+          </View>
+          <TimeInput
+            maxLength={maxLength}
+            placeholder={'00'}
+            value={currentAfterSecond || 0}
+            clockType={clockTypes.minutes}
+            pressed={false}
+            inputType={inputType}
+            blurOnSubmit={false}
+            onChanged={(newAfterSecondInput) => {
+              let newAfterSecond = newAfterSecondInput
+              if (newAfterSecondInput > 24 * 60 * 60) {
+                newAfterSecond = 24 * 60 * 60
+              }
+              setCurrentAfterSecond(newAfterSecond)
+              onChange({
+                afterSecond: newAfterSecond,
+                duration: currentDuration,
+              })
+            }}
+          />
+          <View style={styles.labelContainer}>
+            <Text
+              selectable={false}
+              style={[
+                styles.textCenter,
+                {
+                  ...theme.fonts.medium,
+                  color: color,
+                },
+              ]}
+            >
+              {`Giây`}
+            </Text>
+          </View>
         </View>
-        <TimeInput
-          maxLength={maxLength}
-          placeholder={'00'}
-          value={currentAfterSecond || 0}
-          clockType={clockTypes.minutes}
-          pressed={false}
-          inputType={inputType}
-          blurOnSubmit={false}
-          onChanged={(newAfterSecondInput) => {
-            let newAfterSecond = newAfterSecondInput
-            if (newAfterSecondInput > 24 * 60 * 60) {
-              newAfterSecond = 24 * 60 * 60
-            }
-            setCurrentAfterSecond(newAfterSecond)
-            onChange({
-              afterSecond: newAfterSecond,
-              duration: currentDuration,
-            })
-          }}
-        />
-        <View style={styles.labelContainer}>
-          <Text
-            selectable={false}
-            style={[
-              styles.textCenter,
-              {
-                ...theme.fonts.medium,
-                color: color,
-              },
-            ]}
-          >
-            {`Giây`}
-          </Text>
-        </View>
-      </View>
+      ) : null}
       <View style={styles.hoursAndMinutesSeparator}>
         <View style={styles.spaceDot} />
         <View style={styles.spaceDot} />
