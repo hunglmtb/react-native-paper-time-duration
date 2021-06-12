@@ -24,6 +24,9 @@ import { useLatest } from '../utils'
 import { useState } from 'react'
 
 function TimeInputs({
+  textTimeStart,
+  textTimeEnd,
+  textDuration,
   hours,
   minutes,
   endHours,
@@ -35,6 +38,9 @@ function TimeInputs({
   is24Hour,
   duration,
 }: {
+  textTimeStart?: string
+  textTimeEnd?: string
+  textDuration?: string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
   hours: number
@@ -146,7 +152,7 @@ function TimeInputs({
             },
           ]}
         >
-          {`Bắt đầu`}
+          {textTimeStart}
         </Text>
       </View>
       <View
@@ -235,7 +241,7 @@ function TimeInputs({
                 },
               ]}
             >
-              {`Thời lượng`}
+              {textDuration}
             </Text>
           </View>
           <View
@@ -318,7 +324,7 @@ function TimeInputs({
                 },
               ]}
             >
-              {`Kết thúc`}
+              {textTimeEnd}
             </Text>
           </View>
           <View

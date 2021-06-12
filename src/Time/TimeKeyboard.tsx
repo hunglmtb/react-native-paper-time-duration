@@ -15,6 +15,10 @@ type onChangeFunc = ({
 }) => any
 
 function TimeKeyboard({
+  textDurationUp,
+  textDurationDown,
+  textAfterSecondUp,
+  textAfterSecondDown,
   onFocusInput,
   focused,
   inputType,
@@ -23,6 +27,10 @@ function TimeKeyboard({
   afterSecond,
   maxLength,
 }: {
+  textDurationUp?: string
+  textDurationDown?: string
+  textAfterSecondUp?: string
+  textAfterSecondDown?: string
   locale?: undefined | string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
@@ -38,6 +46,10 @@ function TimeKeyboard({
   return (
     <View style={isLandscape ? styles.rootLandscape : styles.rootPortrait}>
       <TimeKeyboardInput
+        textDurationUp={textDurationUp}
+        textDurationDown={textDurationDown}
+        textAfterSecondUp={textAfterSecondUp}
+        textAfterSecondDown={textAfterSecondDown}
         inputType={inputType}
         onChange={onChange}
         onFocusInput={onFocusInput}
