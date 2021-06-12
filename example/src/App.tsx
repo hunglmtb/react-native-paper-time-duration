@@ -399,6 +399,9 @@ function App({
         minutes={time.minutes} // optional, default: current minutes
         endHours={time.endHours}
         endMinutes={time.endMinutes}
+        textTimeStart={'Bắt đầu lúc'}
+        textTimeEnd={'Kết thúc lúc'}
+        textDuration={'Thời lượng'}
         // duration={time.duration}
         // label="Select time" // optional, default 'Select time'
         // cancelLabel="Cancel" // optional, default: 'Cancel'

@@ -40,6 +40,9 @@ export function TimePickerModal({
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   animationType = 'none',
+  textTimeStart = 'Bắt đầu',
+  textTimeEnd = 'Kết thúc',
+  textDuration = 'Thời lượng',
   locale,
   duration,
 }: {
@@ -47,6 +50,9 @@ export function TimePickerModal({
   label?: string
   cancelLabel?: string
   confirmLabel?: string
+  textTimeStart?: string
+  textTimeEnd?: string
+  textDuration?: string
   hours?: number | undefined
   minutes?: number | undefined
   endHours?: number | undefined
@@ -185,6 +191,9 @@ export function TimePickerModal({
                   locale={locale}
                   inputType={inputType}
                   focused={focused}
+                  textTimeStart={textTimeStart}
+                  textTimeEnd={textTimeEnd}
+                  textDuration={textDuration}
                   hours={localHours}
                   minutes={localMinutes}
                   endHours={localEndHours}

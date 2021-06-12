@@ -15,12 +15,20 @@ import TimeInput from './TimeInput'
 import { useState } from 'react'
 
 function TimeKeyboardInput({
+  textDurationUp,
+  textDurationDown,
+  textAfterSecondUp,
+  textAfterSecondDown,
   inputType,
   onChange,
   duration,
   afterSecond,
   maxLength,
 }: {
+  textDurationUp?: string
+  textDurationDown?: string
+  textAfterSecondUp?: string
+  textAfterSecondDown?: string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
   onFocusInput: (type: PossibleClockTypes) => any
@@ -40,8 +48,12 @@ function TimeKeyboardInput({
   const theme = useTheme()
   const { color } = useSwitchColors(true)
 
-  const [currentAfterSecond, setCurrentAfterSecond] = useState<number | undefined>(afterSecond)
-  const [currentDuration, setCurrentDuration] = useState<number | undefined>(duration)
+  const [currentAfterSecond, setCurrentAfterSecond] = useState<
+    number | undefined
+  >(afterSecond)
+  const [currentDuration, setCurrentDuration] = useState<number | undefined>(
+    duration
+  )
 
   return (
     <View style={[styles.inputContainer]}>
@@ -63,7 +75,7 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {`Sau`}
+              {textDurationUp}
             </Text>
           </View>
           <TimeInput
@@ -97,15 +109,17 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {`Giây`}
+              {textDurationDown}
             </Text>
           </View>
         </View>
       ) : null}
-      <View style={styles.hoursAndMinutesSeparator}>
-        <View style={styles.spaceDot} />
-        <View style={styles.spaceDot} />
-      </View>
+      {currentAfterSecond !== undefined && currentDuration !== undefined ? (
+        <View style={styles.hoursAndMinutesSeparator}>
+          <View style={styles.spaceDot} />
+          <View style={styles.spaceDot} />
+        </View>
+      ) : null}
       {currentDuration !== undefined && (
         <View>
           <View
@@ -124,7 +138,7 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {`Thời lượng`}
+              {textAfterSecondUp}
             </Text>
           </View>
           <TimeInput
@@ -158,7 +172,7 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {`Giây`}
+              {textAfterSecondDown}
             </Text>
           </View>
         </View>
@@ -187,8 +201,6 @@ const styles = StyleSheet.create({
   labelContainer: {
     width: '100%',
     justifyContent: 'flex-end',
-    paddingLeft: 10,
-    paddingRight: 10,
   },
   textCenter: {
     textAlign: 'center',

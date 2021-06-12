@@ -29,6 +29,9 @@ type onChangeFunc = ({
 }) => any
 
 function TimePicker({
+  textTimeStart,
+  textTimeEnd,
+  textDuration,
   hours,
   minutes,
   endHours,
@@ -40,6 +43,9 @@ function TimePicker({
   locale,
   duration,
 }: {
+  textTimeStart?: string
+  textTimeEnd?: string
+  textDuration?: string
   locale?: undefined | string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
@@ -84,6 +90,9 @@ function TimePicker({
   return (
     <View style={isLandscape ? styles.rootLandscape : styles.rootPortrait}>
       <TimeInputs
+        textTimeStart={textTimeStart}
+        textTimeEnd={textTimeEnd}
+        textDuration={textDuration}
         inputType={inputType}
         hours={hours}
         minutes={minutes}

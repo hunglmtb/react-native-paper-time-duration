@@ -29,6 +29,10 @@ export function TimeKeyboardModal({
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   animationType = 'none',
+  textDurationUp = 'Sau',
+  textDurationDown = 'Giây',
+  textAfterSecondUp = 'Thời lượng',
+  textAfterSecondDown = 'Giây',
   locale,
   duration,
   afterSecond,
@@ -38,6 +42,10 @@ export function TimeKeyboardModal({
   label?: string
   cancelLabel?: string
   confirmLabel?: string
+  textDurationUp?: string
+  textDurationDown?: string
+  textAfterSecondUp?: string
+  textAfterSecondDown?: string
   hours?: number | undefined
   minutes?: number | undefined
   visible: boolean | undefined
@@ -132,6 +140,10 @@ export function TimeKeyboardModal({
               </View>
               <View style={styles.timePickerContainer}>
                 <TimeKeyboard
+                  textDurationUp={textDurationUp}
+                  textDurationDown={textDurationDown}
+                  textAfterSecondUp={textAfterSecondUp}
+                  textAfterSecondDown={textAfterSecondDown}
                   locale={locale}
                   inputType={inputType}
                   focused={focused}
