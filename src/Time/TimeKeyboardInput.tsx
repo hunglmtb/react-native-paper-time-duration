@@ -15,6 +15,8 @@ import TimeInput from './TimeInput'
 import { useState } from 'react'
 
 function TimeKeyboardInput({
+  min,
+  max,
   textDurationUp,
   textDurationDown,
   textAfterSecondUp,
@@ -25,6 +27,8 @@ function TimeKeyboardInput({
   afterSecond,
   maxLength,
 }: {
+  min: number
+  max: number
   textDurationUp?: string
   textDurationDown?: string
   textAfterSecondUp?: string
@@ -54,6 +58,46 @@ function TimeKeyboardInput({
   const [currentDuration, setCurrentDuration] = useState<number | undefined>(
     duration
   )
+
+  React.useEffect(() => {
+    let newCurrentAfterSecond = currentAfterSecond
+    let newCurrentDuration = currentDuration
+    if (newCurrentAfterSecond && newCurrentAfterSecond <= min) {
+      newCurrentAfterSecond = min
+    }
+    if (newCurrentAfterSecond && newCurrentAfterSecond >= max) {
+      newCurrentAfterSecond = max
+    }
+    if (newCurrentDuration && newCurrentDuration <= min) {
+      newCurrentDuration = min
+    }
+    if (newCurrentDuration && newCurrentDuration >= max) {
+      newCurrentDuration = max
+    }
+    onChange({
+      afterSecond: newCurrentAfterSecond,
+      duration: newCurrentDuration,
+    })
+    let intervalSetTime: any = null
+    if (
+      newCurrentAfterSecond !== currentAfterSecond ||
+      newCurrentDuration !== currentDuration
+    ) {
+      intervalSetTime = setInterval(() => {
+        setCurrentAfterSecond(newCurrentAfterSecond)
+        setCurrentDuration(newCurrentDuration)
+      }, 3000)
+    }
+    return () => clearInterval(intervalSetTime)
+  }, [
+    onChange,
+    min,
+    max,
+    setCurrentAfterSecond,
+    setCurrentDuration,
+    currentDuration,
+    currentAfterSecond,
+  ])
 
   return (
     <View style={[styles.inputContainer]}>
@@ -156,8 +200,8 @@ function TimeKeyboardInput({
               }
               setCurrentDuration(newDuration)
               onChange({
-                duration: newDuration,
                 afterSecond: currentAfterSecond,
+                duration: newDuration,
               })
             }}
           />

@@ -416,6 +416,11 @@ function App({
         onConfirm={onConfirmTimeKeyboard}
         duration={timeKeyboard.duration}
         afterSecond={timeKeyboard.afterSecond}
+        min={24}
+        max={128}
+        footerLeft={
+          <Button color="red" onPress={() => setTimeKeyboardOpen(false)}>Convert</Button>
+        }
       />
     </>
   );

@@ -15,6 +15,8 @@ type onChangeFunc = ({
 }) => any
 
 function TimeKeyboard({
+  min,
+  max,
   textDurationUp,
   textDurationDown,
   textAfterSecondUp,
@@ -27,6 +29,8 @@ function TimeKeyboard({
   afterSecond,
   maxLength,
 }: {
+  min: number
+  max: number
   textDurationUp?: string
   textDurationDown?: string
   textAfterSecondUp?: string
@@ -46,6 +50,8 @@ function TimeKeyboard({
   return (
     <View style={isLandscape ? styles.rootLandscape : styles.rootPortrait}>
       <TimeKeyboardInput
+        min={min}
+        max={max}
         textDurationUp={textDurationUp}
         textDurationDown={textDurationDown}
         textAfterSecondUp={textAfterSecondUp}

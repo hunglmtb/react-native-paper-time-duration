@@ -82,7 +82,6 @@ function AnalogClock({
     (e: GestureResponderEvent, final: boolean) => {
       let x = e.nativeEvent.locationX
       let y = e.nativeEvent.locationY
-
       let angle = getAngle(x, y, circleSize)
 
       if (focusedRef.current === clockTypes.hours) {
@@ -152,13 +151,13 @@ function AnalogClock({
           })
         }
       } else if (focusedRef.current === clockTypes.endMinutes) {
-        let pickedMinutes = getMinutes(angle)
-        if (minutesRef.current !== pickedMinutes) {
+        let pickedEndMinutes = getMinutes(angle)
+        if (endMinutesRef.current !== pickedEndMinutes) {
           onChangeRef.current({
             hours: hoursRef.current,
             minutes: minutesRef.current,
             endHours: endHoursRef.current,
-            endMinutes: pickedMinutes,
+            endMinutes: pickedEndMinutes,
           })
         }
       }

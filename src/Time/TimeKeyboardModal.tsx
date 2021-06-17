@@ -23,6 +23,9 @@ const supportedOrientations: any[] = [
 
 export function TimeKeyboardModal({
   visible,
+  footerLeft,
+  min = 0,
+  max = 24 * 60 * 60,
   onDismiss,
   onConfirm,
   label = 'Select time',
@@ -40,6 +43,9 @@ export function TimeKeyboardModal({
 }: {
   locale?: undefined | string
   label?: string
+  min?: number
+  max?: number
+  footerLeft?: string | React.ReactNode
   cancelLabel?: string
   confirmLabel?: string
   textDurationUp?: string
@@ -140,6 +146,8 @@ export function TimeKeyboardModal({
               </View>
               <View style={styles.timePickerContainer}>
                 <TimeKeyboard
+                  min={min}
+                  max={max}
                   textDurationUp={textDurationUp}
                   textDurationDown={textDurationDown}
                   textAfterSecondUp={textAfterSecondUp}
@@ -155,6 +163,7 @@ export function TimeKeyboardModal({
                 />
               </View>
               <View style={styles.bottom}>
+                <View>{footerLeft}</View>
                 <View style={styles.fill} />
                 <Button onPress={onDismiss}>{cancelLabel}</Button>
                 <Button
