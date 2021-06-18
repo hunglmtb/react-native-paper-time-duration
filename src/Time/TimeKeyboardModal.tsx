@@ -48,10 +48,10 @@ export function TimeKeyboardModal({
   footerLeft?: string | React.ReactNode
   cancelLabel?: string
   confirmLabel?: string
-  textDurationUp?: string
-  textDurationDown?: string
-  textAfterSecondUp?: string
-  textAfterSecondDown?: string
+  textDurationUp?: string | React.ReactNode
+  textDurationDown?: string | React.ReactNode
+  textAfterSecondUp?: string | React.ReactNode
+  textAfterSecondDown?: string | React.ReactNode
   hours?: number | undefined
   minutes?: number | undefined
   visible: boolean | undefined

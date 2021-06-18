@@ -29,10 +29,10 @@ function TimeKeyboardInput({
 }: {
   min: number
   max: number
-  textDurationUp?: string
-  textDurationDown?: string
-  textAfterSecondUp?: string
-  textAfterSecondDown?: string
+  textDurationUp?: string | React.ReactNode
+  textDurationDown?: string | React.ReactNode
+  textAfterSecondUp?: string | React.ReactNode
+  textAfterSecondDown?: string | React.ReactNode
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
   onFocusInput: (type: PossibleClockTypes) => any

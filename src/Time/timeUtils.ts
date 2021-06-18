@@ -42,15 +42,23 @@ export const inputTypeIcons: InputIconMap = {
   picker: 'clock-outline',
 }
 
-export type PossibleClockTypes = 'hours' | 'minutes' | 'endHours' | 'endMinutes'
+export type PossibleClockTypes =
+  | 'hours'
+  | 'minutes'
+  | 'seconds'
+  | 'endHours'
+  | 'endMinutes'
+  | 'endSeconds'
 export type ClockTypeMap = {
   [clockType in PossibleClockTypes]: PossibleClockTypes
 }
 export const clockTypes: ClockTypeMap = {
   minutes: 'minutes',
   hours: 'hours',
+  seconds: 'seconds',
   endHours: 'endHours',
   endMinutes: 'endMinutes',
+  endSeconds: 'endSeconds',
 }
 
 // Code inspiration and copied from: https://github.com/ShaneGH/analogue-time-picker/blob/master/src/utils/angle.ts
@@ -99,6 +107,16 @@ export function getMinutes(handAngle: number) {
   while (minute >= 60) minute -= 60
 
   return minute
+}
+
+export function getSeconds(handAngle: number) {
+  handAngle = snap(handAngle, _12)
+
+  let seconds = parseInt((((handAngle - _90) % _360) / _12).toFixed(), 10)
+  while (seconds < 0) seconds += 60
+  while (seconds >= 60) seconds -= 60
+
+  return seconds
 }
 
 // Calculate the hour from the hand angle
