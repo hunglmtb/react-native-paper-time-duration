@@ -34,8 +34,10 @@ export function TimePickerModal({
   onConfirm,
   hours,
   minutes,
+  seconds,
   endHours,
   endMinutes,
+  endSeconds,
   label = 'Select time',
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
@@ -55,21 +57,27 @@ export function TimePickerModal({
   textDuration?: string
   hours?: number | undefined
   minutes?: number | undefined
+  seconds?: number | undefined
   endHours?: number | undefined
   endMinutes?: number | undefined
+  endSeconds?: number | undefined
   visible: boolean | undefined
   onDismiss: () => any
   onConfirm: ({
     hours,
     minutes,
+    seconds,
     endHours,
     endMinutes,
+    endSeconds,
     duration,
   }: {
     hours: number
     minutes: number
+    seconds: number
     endHours: number
     endMinutes: number
+    endSeconds: number
     duration: number
   }) => any
   animationType?: 'slide' | 'fade' | 'none'
@@ -87,11 +95,17 @@ export function TimePickerModal({
   const [localMinutes, setLocalMinutes] = React.useState<number>(
     getMinutes(minutes)
   )
+  const [localSeconds, setLocalSeconds] = React.useState<number>(
+    getSeconds(seconds)
+  )
   const [localEndHours, setLocalEndHours] = React.useState<number>(
     getHours(endHours)
   )
   const [localEndMinutes, setLocalEndMinutes] = React.useState<number>(
     getMinutes(endMinutes)
+  )
+  const [localEndSeconds, setLocalEndSeconds] = React.useState<number>(
+    getSeconds(endSeconds)
   )
   const [localDuration, setLocalDuration] = React.useState<number>(0)
 
@@ -104,12 +118,20 @@ export function TimePickerModal({
   }, [setLocalMinutes, minutes])
 
   React.useEffect(() => {
+    setLocalEndSeconds(getSeconds(seconds))
+  }, [setLocalSeconds, seconds])
+
+  React.useEffect(() => {
     setLocalEndHours(getHours(endHours))
   }, [setLocalEndHours, endHours])
 
   React.useEffect(() => {
     setLocalEndMinutes(getMinutes(endMinutes))
   }, [setLocalEndMinutes, endMinutes])
+
+  React.useEffect(() => {
+    setLocalEndSeconds(getSeconds(endSeconds))
+  }, [setLocalEndSeconds, endSeconds])
 
   React.useEffect(() => {
     setLocalDuration(duration || 0)
@@ -124,8 +146,10 @@ export function TimePickerModal({
       focused?: PossibleClockTypes | undefined
       hours: number
       minutes: number
+      seconds: number
       endHours?: number
       endMinutes?: number
+      endSeconds?: number
       duration?: number
     }) => {
       if (params.focused) {
@@ -134,8 +158,10 @@ export function TimePickerModal({
 
       setLocalHours(params.hours)
       setLocalMinutes(params.minutes)
+      setLocalSeconds(params.seconds)
       setLocalEndHours(params.endHours || 0)
       setLocalEndMinutes(params.endMinutes || 0)
+      setLocalEndSeconds(params.endSeconds || 0)
       setLocalDuration(params.duration || 0)
     },
     [setFocused, setLocalHours, setLocalMinutes, setLocalDuration]
@@ -196,8 +222,10 @@ export function TimePickerModal({
                   textDuration={textDuration}
                   hours={localHours}
                   minutes={localMinutes}
+                  seconds={localSeconds}
                   endHours={localEndHours}
                   endMinutes={localEndMinutes}
+                  endSeconds={localEndSeconds}
                   onChange={onChange}
                   onFocusInput={onFocusInput}
                   duration={duration}
@@ -218,8 +246,10 @@ export function TimePickerModal({
                     onConfirm({
                       hours: localHours,
                       minutes: localMinutes,
+                      seconds: localSeconds,
                       endHours: localEndHours,
                       endMinutes: localEndMinutes,
+                      endSeconds: localEndSeconds,
                       duration: localDuration,
                     })
                   }
@@ -239,6 +269,11 @@ function getMinutes(minutes: number | undefined | null): number {
   return minutes === undefined || minutes === null
     ? new Date().getMinutes()
     : minutes
+}
+function getSeconds(seconds: number | undefined | null): number {
+  return seconds === undefined || seconds === null
+    ? new Date().getSeconds()
+    : seconds
 }
 function getHours(hours: number | undefined | null): number {
   return hours === undefined || hours === null ? new Date().getHours() : hours

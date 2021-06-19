@@ -15,6 +15,10 @@ type onChangeFunc = ({
 }) => any
 
 function TimeKeyboard({
+  minDuration,
+  maxDuration,
+  minAfterSeconds,
+  maxAfterSeconds,
   textDurationUp,
   textDurationDown,
   textAfterSecondUp,
@@ -27,10 +31,14 @@ function TimeKeyboard({
   afterSecond,
   maxLength,
 }: {
-  textDurationUp?: string
-  textDurationDown?: string
-  textAfterSecondUp?: string
-  textAfterSecondDown?: string
+  minDuration: number
+  maxDuration: number
+  minAfterSeconds: number
+  maxAfterSeconds: number
+  textDurationUp?: string | React.ReactNode
+  textDurationDown?: string | React.ReactNode
+  textAfterSecondUp?: string | React.ReactNode
+  textAfterSecondDown?: string | React.ReactNode
   locale?: undefined | string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
@@ -46,6 +54,10 @@ function TimeKeyboard({
   return (
     <View style={isLandscape ? styles.rootLandscape : styles.rootPortrait}>
       <TimeKeyboardInput
+        minDuration={minDuration}
+        maxDuration={maxDuration}
+        minAfterSeconds={minAfterSeconds}
+        maxAfterSeconds={maxAfterSeconds}
         textDurationUp={textDurationUp}
         textDurationDown={textDurationDown}
         textAfterSecondUp={textAfterSecondUp}
