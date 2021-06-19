@@ -104,13 +104,13 @@ function TimeInput(
 }
 
 const styles = StyleSheet.create({
-  root: { position: 'relative', height: 80, width: 96 },
+  root: { position: 'relative', height: 60, width: 80 },
   input: {
-    fontSize: 50,
+    fontSize: 25,
     textAlign: 'center',
     textAlignVertical: 'center',
-    width: 96,
-    height: 80,
+    width: 80,
+    height: 60,
   },
   buttonOverlay: { overflow: 'hidden' },
 })

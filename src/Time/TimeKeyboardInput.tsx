@@ -15,6 +15,10 @@ import TimeInput from './TimeInput'
 import { useState } from 'react'
 
 function TimeKeyboardInput({
+  minDuration,
+  maxDuration,
+  minAfterSeconds,
+  maxAfterSeconds,
   textDurationUp,
   textDurationDown,
   textAfterSecondUp,
@@ -25,10 +29,14 @@ function TimeKeyboardInput({
   afterSecond,
   maxLength,
 }: {
-  textDurationUp?: string
-  textDurationDown?: string
-  textAfterSecondUp?: string
-  textAfterSecondDown?: string
+  minDuration: number
+  maxDuration: number
+  minAfterSeconds: number
+  maxAfterSeconds: number
+  textDurationUp?: string | React.ReactNode
+  textDurationDown?: string | React.ReactNode
+  textAfterSecondUp?: string | React.ReactNode
+  textAfterSecondDown?: string | React.ReactNode
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
   onFocusInput: (type: PossibleClockTypes) => any
@@ -54,6 +62,48 @@ function TimeKeyboardInput({
   const [currentDuration, setCurrentDuration] = useState<number | undefined>(
     duration
   )
+
+  React.useEffect(() => {
+    let newCurrentAfterSecond = currentAfterSecond
+    let newCurrentDuration = currentDuration
+    if (newCurrentAfterSecond && newCurrentAfterSecond <= minAfterSeconds) {
+      newCurrentAfterSecond = minAfterSeconds
+    }
+    if (newCurrentAfterSecond && newCurrentAfterSecond >= maxAfterSeconds) {
+      newCurrentAfterSecond = maxAfterSeconds
+    }
+    if (newCurrentDuration && newCurrentDuration <= minDuration) {
+      newCurrentDuration = minDuration
+    }
+    if (newCurrentDuration && newCurrentDuration >= maxDuration) {
+      newCurrentDuration = maxDuration
+    }
+    onChange({
+      afterSecond: newCurrentAfterSecond,
+      duration: newCurrentDuration,
+    })
+    let intervalSetTime: any = null
+    if (
+      newCurrentAfterSecond !== currentAfterSecond ||
+      newCurrentDuration !== currentDuration
+    ) {
+      intervalSetTime = setInterval(() => {
+        setCurrentAfterSecond(newCurrentAfterSecond)
+        setCurrentDuration(newCurrentDuration)
+      }, 1000)
+    }
+    return () => clearInterval(intervalSetTime)
+  }, [
+    onChange,
+    minDuration,
+    maxDuration,
+    minAfterSeconds,
+    maxAfterSeconds,
+    setCurrentAfterSecond,
+    setCurrentDuration,
+    currentDuration,
+    currentAfterSecond,
+  ])
 
   return (
     <View style={[styles.inputContainer]}>
@@ -156,8 +206,8 @@ function TimeKeyboardInput({
               }
               setCurrentDuration(newDuration)
               onChange({
-                duration: newDuration,
                 afterSecond: currentAfterSecond,
+                duration: newDuration,
               })
             }}
           />

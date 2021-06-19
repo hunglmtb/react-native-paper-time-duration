@@ -23,6 +23,11 @@ const supportedOrientations: any[] = [
 
 export function TimeKeyboardModal({
   visible,
+  footerLeft,
+  minDuration = 0,
+  maxDuration = 24 * 60 * 60,
+  minAfterSeconds = 0,
+  maxAfterSeconds = 24 * 60 * 60,
   onDismiss,
   onConfirm,
   label = 'Select time',
@@ -40,12 +45,17 @@ export function TimeKeyboardModal({
 }: {
   locale?: undefined | string
   label?: string
+  minDuration?: number
+  maxDuration?: number
+  minAfterSeconds?: number
+  maxAfterSeconds?: number
+  footerLeft?: string | React.ReactNode
   cancelLabel?: string
   confirmLabel?: string
-  textDurationUp?: string
-  textDurationDown?: string
-  textAfterSecondUp?: string
-  textAfterSecondDown?: string
+  textDurationUp?: string | React.ReactNode
+  textDurationDown?: string | React.ReactNode
+  textAfterSecondUp?: string | React.ReactNode
+  textAfterSecondDown?: string | React.ReactNode
   hours?: number | undefined
   minutes?: number | undefined
   visible: boolean | undefined
@@ -140,6 +150,10 @@ export function TimeKeyboardModal({
               </View>
               <View style={styles.timePickerContainer}>
                 <TimeKeyboard
+                  minDuration={minDuration}
+                  maxDuration={maxDuration}
+                  minAfterSeconds={minAfterSeconds}
+                  maxAfterSeconds={maxAfterSeconds}
                   textDurationUp={textDurationUp}
                   textDurationDown={textDurationDown}
                   textAfterSecondUp={textAfterSecondUp}
@@ -155,6 +169,7 @@ export function TimeKeyboardModal({
                 />
               </View>
               <View style={styles.bottom}>
+                <View>{footerLeft}</View>
                 <View style={styles.fill} />
                 <Button onPress={onDismiss}>{cancelLabel}</Button>
                 <Button

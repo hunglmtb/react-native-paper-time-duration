@@ -13,6 +13,7 @@ import {
   getHourType,
   getHourTypeFromOffset,
   getMinutes,
+  getSeconds,
   hourTypes,
   PossibleClockTypes,
 } from './timeUtils'
@@ -30,30 +31,38 @@ export const circleSize = 215
 function AnalogClock({
   hours,
   minutes,
+  seconds,
   endHours,
   endMinutes,
+  endSeconds,
   focused,
   is24Hour,
   onChange,
 }: {
   hours: number
   minutes: number
+  seconds: number
   endHours: number
   endMinutes: number
+  endSeconds: number
   focused: PossibleClockTypes
   is24Hour: boolean
   onChange: ({
     hours,
     minutes,
-    focused,
+    seconds,
     endHours,
     endMinutes,
+    endSeconds,
+    focused,
     duration,
   }: {
     hours: number
     minutes: number
+    seconds: number
     endHours?: number
     endMinutes?: number
+    endSeconds?: number
     focused?: undefined | PossibleClockTypes
     duration?: number
   }) => any
@@ -71,18 +80,19 @@ function AnalogClock({
   // Hooks are nice, sometimes... :-)..
   // We need the latest values, since the onPointerMove uses a closure to the function
   const hoursRef = useLatest(hours)
-  const endHoursRef = useLatest(endHours)
-  const onChangeRef = useLatest(onChange)
   const minutesRef = useLatest(minutes)
+  const secondsRef = useLatest(seconds)
+  const endHoursRef = useLatest(endHours)
   const endMinutesRef = useLatest(endMinutes)
+  const endSecondsRef = useLatest(endSeconds)
   const focusedRef = useLatest(focused)
   const is24HourRef = useLatest(is24Hour)
+  const onChangeRef = useLatest(onChange)
 
   const onPointerMove = React.useCallback(
     (e: GestureResponderEvent, final: boolean) => {
       let x = e.nativeEvent.locationX
       let y = e.nativeEvent.locationY
-
       let angle = getAngle(x, y, circleSize)
 
       if (focusedRef.current === clockTypes.hours) {
@@ -107,8 +117,10 @@ function AnalogClock({
           onChangeRef.current({
             hours: pickedHours,
             minutes: minutesRef.current,
+            seconds: secondsRef.current,
             endHours: endHoursRef.current,
             endMinutes: endMinutesRef.current,
+            endSeconds: endSecondsRef.current,
             focused: final ? clockTypes.minutes : undefined,
           })
         }
@@ -118,8 +130,23 @@ function AnalogClock({
           onChangeRef.current({
             hours: hoursRef.current,
             minutes: pickedMinutes,
+            seconds: secondsRef.current,
             endHours: endHoursRef.current,
             endMinutes: endMinutesRef.current,
+            endSeconds: endSecondsRef.current,
+            focused: final ? clockTypes.seconds : undefined,
+          })
+        }
+      } else if (focusedRef.current === clockTypes.seconds) {
+        let pickedSeconds = getSeconds(angle)
+        if (secondsRef.current !== pickedSeconds) {
+          onChangeRef.current({
+            hours: hoursRef.current,
+            minutes: minutesRef.current,
+            seconds: pickedSeconds,
+            endHours: endHoursRef.current,
+            endMinutes: endMinutesRef.current,
+            endSeconds: endSecondsRef.current,
           })
         }
       }
@@ -146,31 +173,50 @@ function AnalogClock({
           onChangeRef.current({
             hours: hoursRef.current,
             minutes: minutesRef.current,
+            seconds: secondsRef.current,
             endHours: pickedHours,
             endMinutes: endMinutesRef.current,
+            endSeconds: endSecondsRef.current,
             focused: final ? clockTypes.endMinutes : undefined,
           })
         }
       } else if (focusedRef.current === clockTypes.endMinutes) {
-        let pickedMinutes = getMinutes(angle)
-        if (minutesRef.current !== pickedMinutes) {
+        let pickedEndMinutes = getMinutes(angle)
+        if (endMinutesRef.current !== pickedEndMinutes) {
           onChangeRef.current({
             hours: hoursRef.current,
             minutes: minutesRef.current,
+            seconds: secondsRef.current,
             endHours: endHoursRef.current,
-            endMinutes: pickedMinutes,
+            endMinutes: pickedEndMinutes,
+            endSeconds: endSecondsRef.current,
+            focused: final ? clockTypes.endSeconds : undefined,
+          })
+        }
+      } else if (focusedRef.current === clockTypes.endSeconds) {
+        let pickedEndSeconds = getSeconds(angle)
+        if (endSecondsRef.current !== pickedEndSeconds) {
+          onChangeRef.current({
+            hours: hoursRef.current,
+            minutes: minutesRef.current,
+            seconds: secondsRef.current,
+            endHours: endHoursRef.current,
+            endMinutes: endMinutesRef.current,
+            endSeconds: pickedEndSeconds,
           })
         }
       }
     },
     [
-      focusedRef,
-      is24HourRef,
       hoursRef,
-      onChangeRef,
       minutesRef,
+      secondsRef,
       endHoursRef,
       endMinutesRef,
+      endSecondsRef,
+      focusedRef,
+      is24HourRef,
+      onChangeRef,
     ]
   )
 
@@ -202,13 +248,18 @@ function AnalogClock({
       ? endHours
       : focused === clockTypes.minutes
       ? minutes
-      : endMinutes
+      : focused === clockTypes.endMinutes
+      ? endMinutes
+      : focused === clockTypes.seconds
+      ? seconds
+      : endSeconds
 
   const degreesPerNumber =
     focused === clockTypes.hours ? 30 : focused === clockTypes.endHours ? 30 : 6
 
   const selectedHours = focused === clockTypes.hours ? hours : endHours
   const selectedMinutes = focused === clockTypes.minutes ? minutes : endMinutes
+  const selectedSeconds = focused === clockTypes.seconds ? seconds : endSeconds
 
   return (
     <View
@@ -261,7 +312,16 @@ function AnalogClock({
       <AnimatedClockSwitcher
         focused={focused}
         hours={<AnalogClockHours is24Hour={is24Hour} hours={selectedHours} />}
-        minutes={<AnalogClockMinutes minutes={selectedMinutes} />}
+        minutes={
+          <AnalogClockMinutes
+            minutes={
+              focused === clockTypes.minutes ||
+              focused === clockTypes.endMinutes
+                ? selectedMinutes
+                : selectedSeconds
+            }
+          />
+        }
       />
     </View>
   )
@@ -275,6 +335,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: circleSize / 2,
+    marginLeft: 35,
+    marginTop: -10,
   },
   middlePoint: {
     borderRadius: 4,
