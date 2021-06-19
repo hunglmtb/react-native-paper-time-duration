@@ -425,8 +425,10 @@ function App({
         textDurationUp={
           <View>Sau</View>
         }
-        min={24}
-        max={128}
+        minDuration={24}
+        maxDuration={128}
+        minAfterSeconds={56}
+        maxAfterSeconds={256}
         footerLeft={
           <Button color="red" onPress={() => setTimeKeyboardOpen(false)}>Convert</Button>
         }

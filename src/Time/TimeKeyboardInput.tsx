@@ -15,8 +15,10 @@ import TimeInput from './TimeInput'
 import { useState } from 'react'
 
 function TimeKeyboardInput({
-  min,
-  max,
+  minDuration,
+  maxDuration,
+  minAfterSeconds,
+  maxAfterSeconds,
   textDurationUp,
   textDurationDown,
   textAfterSecondUp,
@@ -27,8 +29,10 @@ function TimeKeyboardInput({
   afterSecond,
   maxLength,
 }: {
-  min: number
-  max: number
+  minDuration: number
+  maxDuration: number
+  minAfterSeconds: number
+  maxAfterSeconds: number
   textDurationUp?: string | React.ReactNode
   textDurationDown?: string | React.ReactNode
   textAfterSecondUp?: string | React.ReactNode
@@ -62,17 +66,17 @@ function TimeKeyboardInput({
   React.useEffect(() => {
     let newCurrentAfterSecond = currentAfterSecond
     let newCurrentDuration = currentDuration
-    if (newCurrentAfterSecond && newCurrentAfterSecond <= min) {
-      newCurrentAfterSecond = min
+    if (newCurrentAfterSecond && newCurrentAfterSecond <= minAfterSeconds) {
+      newCurrentAfterSecond = minAfterSeconds
     }
-    if (newCurrentAfterSecond && newCurrentAfterSecond >= max) {
-      newCurrentAfterSecond = max
+    if (newCurrentAfterSecond && newCurrentAfterSecond >= maxAfterSeconds) {
+      newCurrentAfterSecond = maxAfterSeconds
     }
-    if (newCurrentDuration && newCurrentDuration <= min) {
-      newCurrentDuration = min
+    if (newCurrentDuration && newCurrentDuration <= minDuration) {
+      newCurrentDuration = minDuration
     }
-    if (newCurrentDuration && newCurrentDuration >= max) {
-      newCurrentDuration = max
+    if (newCurrentDuration && newCurrentDuration >= maxDuration) {
+      newCurrentDuration = maxDuration
     }
     onChange({
       afterSecond: newCurrentAfterSecond,
@@ -86,13 +90,15 @@ function TimeKeyboardInput({
       intervalSetTime = setInterval(() => {
         setCurrentAfterSecond(newCurrentAfterSecond)
         setCurrentDuration(newCurrentDuration)
-      }, 3000)
+      }, 1000)
     }
     return () => clearInterval(intervalSetTime)
   }, [
     onChange,
-    min,
-    max,
+    minDuration,
+    maxDuration,
+    minAfterSeconds,
+    maxAfterSeconds,
     setCurrentAfterSecond,
     setCurrentDuration,
     currentDuration,
