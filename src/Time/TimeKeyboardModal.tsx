@@ -21,28 +21,7 @@ const supportedOrientations: any[] = [
   'landscape-right',
 ]
 
-export function TimeKeyboardModal({
-  visible,
-  footerLeft,
-  minDuration = 0,
-  maxDuration = 24 * 60 * 60,
-  minAfterSeconds = 0,
-  maxAfterSeconds = 24 * 60 * 60,
-  onDismiss,
-  onConfirm,
-  label = 'Select time',
-  cancelLabel = 'Cancel',
-  confirmLabel = 'Ok',
-  animationType = 'none',
-  textDurationUp = 'Sau',
-  textDurationDown = 'Giây',
-  textAfterSecondUp = 'Thời lượng',
-  textAfterSecondDown = 'Giây',
-  locale,
-  duration,
-  afterSecond,
-  maxLength,
-}: {
+export interface ITimeKeyboardModalProps {
   locale?: undefined | string
   label?: string
   minDuration?: number
@@ -71,7 +50,30 @@ export function TimeKeyboardModal({
   duration?: number | undefined
   afterSecond?: number
   maxLength?: number
-}) {
+}
+
+export function TimeKeyboardModal({
+  visible,
+  footerLeft,
+  minDuration = 0,
+  maxDuration = 24 * 60 * 60,
+  minAfterSeconds = 0,
+  maxAfterSeconds = 24 * 60 * 60,
+  onDismiss,
+  onConfirm,
+  label = 'Select time',
+  cancelLabel = 'Cancel',
+  confirmLabel = 'Ok',
+  animationType = 'none',
+  textDurationUp = 'Sau',
+  textDurationDown = 'Giây',
+  textAfterSecondUp = 'Thời lượng',
+  textAfterSecondDown = 'Giây',
+  locale,
+  duration,
+  afterSecond,
+  maxLength,
+}: ITimeKeyboardModalProps) {
   const theme = useTheme()
 
   const [inputType] = React.useState(inputTypes.picker)
