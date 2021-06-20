@@ -125,7 +125,7 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {textDurationUp}
+              {textAfterSecondUp}
             </Text>
           </View>
           <TimeInput
@@ -159,7 +159,7 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {textDurationDown}
+              {textAfterSecondDown}
             </Text>
           </View>
         </View>
@@ -188,7 +188,7 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {textAfterSecondUp}
+              {textDurationUp}
             </Text>
           </View>
           <TimeInput
@@ -222,7 +222,7 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {textAfterSecondDown}
+              {textDurationDown}
             </Text>
           </View>
         </View>
