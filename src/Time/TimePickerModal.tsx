@@ -19,6 +19,7 @@ import {
   PossibleInputTypes,
   reverseInputTypes,
 } from './timeUtils'
+import { ITimePickerModalProps } from './picker'
 
 const supportedOrientations: any[] = [
   'portrait',
@@ -30,6 +31,9 @@ const supportedOrientations: any[] = [
 
 export function TimePickerModal({
   visible,
+  pickerType,
+  iconToggle,
+  footerLeft,
   onDismiss,
   onConfirm,
   hours,
@@ -47,47 +51,19 @@ export function TimePickerModal({
   textDuration = 'Thời lượng',
   locale,
   duration,
-}: {
-  locale?: undefined | string
-  label?: string
-  cancelLabel?: string
-  confirmLabel?: string
-  textTimeStart?: string
-  textTimeEnd?: string
-  textDuration?: string
-  hours?: number | undefined
-  minutes?: number | undefined
-  seconds?: number | undefined
-  endHours?: number | undefined
-  endMinutes?: number | undefined
-  endSeconds?: number | undefined
-  visible: boolean | undefined
-  onDismiss: () => any
-  onConfirm: ({
-    hours,
-    minutes,
-    seconds,
-    endHours,
-    endMinutes,
-    endSeconds,
-    duration,
-  }: {
-    hours: number
-    minutes: number
-    seconds: number
-    endHours: number
-    endMinutes: number
-    endSeconds: number
-    duration: number
-  }) => any
-  animationType?: 'slide' | 'fade' | 'none'
-  duration?: number
-}) {
+}: ITimePickerModalProps) {
   const theme = useTheme()
 
   const [inputType, setInputType] = React.useState<PossibleInputTypes>(
-    inputTypes.picker
+    pickerType || inputTypes.picker
   )
+
+  React.useEffect(() => {
+    if (pickerType) {
+      setInputType(pickerType)
+    }
+  }, [pickerType])
+
   const [focused, setFocused] = React.useState<PossibleClockTypes>(
     clockTypes.hours
   )
@@ -232,13 +208,18 @@ export function TimePickerModal({
                 />
               </View>
               <View style={styles.bottom}>
-                <IconButton
-                  icon={inputTypeIcons[reverseInputTypes[inputType]]}
-                  onPress={() => setInputType(reverseInputTypes[inputType])}
-                  size={24}
-                  style={styles.inputTypeToggle}
-                  accessibilityLabel="toggle keyboard"
-                />
+                {iconToggle ? (
+                  iconToggle
+                ) : (
+                  <IconButton
+                    icon={inputTypeIcons[reverseInputTypes[inputType]]}
+                    onPress={() => setInputType(reverseInputTypes[inputType])}
+                    size={24}
+                    style={styles.inputTypeToggle}
+                    accessibilityLabel="toggle keyboard"
+                  />
+                )}
+                {footerLeft}
                 <View style={styles.fill} />
                 <Button onPress={onDismiss}>{cancelLabel}</Button>
                 <Button
