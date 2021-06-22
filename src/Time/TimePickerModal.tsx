@@ -94,7 +94,7 @@ export function TimePickerModal({
   }, [setLocalMinutes, minutes])
 
   React.useEffect(() => {
-    setLocalEndSeconds(getSeconds(seconds))
+    setLocalSeconds(getSeconds(seconds))
   }, [setLocalSeconds, seconds])
 
   React.useEffect(() => {
@@ -140,7 +140,16 @@ export function TimePickerModal({
       setLocalEndSeconds(params.endSeconds || 0)
       setLocalDuration(params.duration || 0)
     },
-    [setFocused, setLocalHours, setLocalMinutes, setLocalDuration]
+    [
+      setFocused,
+      setLocalHours,
+      setLocalMinutes,
+      setLocalSeconds,
+      setLocalEndHours,
+      setLocalEndMinutes,
+      setLocalEndSeconds,
+      setLocalDuration,
+    ]
   )
   return (
     <Modal

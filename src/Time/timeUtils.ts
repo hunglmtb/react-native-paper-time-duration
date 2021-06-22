@@ -238,3 +238,15 @@ export function toHourOutputFormat(
   }
   return newHours
 }
+
+export function compareEndTimeMidnight(
+  endHours: number,
+  endMinutes: number,
+  endSeconds: number
+): boolean {
+  return !!(
+    Math.abs(endHours) === 0 &&
+    Math.abs(endMinutes) === 0 &&
+    Math.abs(endSeconds) === 0
+  )
+}
