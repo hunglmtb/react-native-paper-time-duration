@@ -24,10 +24,15 @@ import { useLatest } from '../utils'
 import { useState } from 'react'
 
 function TimeInputs({
+  textTimeStart,
+  textTimeEnd,
+  textDuration,
   hours,
   minutes,
+  seconds,
   endHours,
   endMinutes,
+  endSeconds,
   onFocusInput,
   focused,
   inputType,
@@ -35,25 +40,34 @@ function TimeInputs({
   is24Hour,
   duration,
 }: {
+  textTimeStart?: string
+  textTimeEnd?: string
+  textDuration?: string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
   hours: number
   minutes: number
+  seconds: number
   endHours: number
   endMinutes: number
+  endSeconds: number
   onFocusInput: (type: PossibleClockTypes) => any
   onChange: ({
     hours,
     minutes,
+    seconds,
     endHours,
     endMinutes,
+    endSeconds,
     duration,
     focused,
   }: {
     hours: number
     minutes: number
+    seconds: number
     endHours?: number
     endMinutes?: number
+    endSeconds?: number
     duration?: number
     focused?: undefined | PossibleClockTypes
   }) => any
@@ -80,17 +94,21 @@ function TimeInputs({
   const [currentDuration, setCurrentDuration] = useState(duration)
   const minutesRef = useLatest(minutes)
   const endMinutesRef = useLatest(endMinutes)
+  const secondsRef = useLatest(seconds)
+  const endSecondsRef = useLatest(endSeconds)
   const onChangeHours = React.useCallback(
     (newHours: number) => {
       onChange({
         hours: newHours,
         minutes: minutesRef.current,
-        focused: clockTypes.hours,
+        seconds: secondsRef.current,
         endHours,
         endMinutes: endMinutesRef.current,
+        endSeconds: endSecondsRef.current,
+        focused: clockTypes.hours,
       })
     },
-    [endHours, endMinutesRef, onChange, minutesRef]
+    [endHours, endMinutesRef, onChange, minutesRef, secondsRef, endSecondsRef]
   )
 
   const onChangeEndHours = React.useCallback(
@@ -98,26 +116,47 @@ function TimeInputs({
       onChange({
         hours,
         minutes: minutesRef.current,
-        focused: clockTypes.endHours,
+        seconds: secondsRef.current,
         endHours: newEndHours,
         endMinutes: endMinutesRef.current,
+        endSeconds: endSecondsRef.current,
+        focused: clockTypes.endHours,
       })
     },
-    [onChange, endMinutesRef, minutesRef, hours]
+    [onChange, endMinutesRef, minutesRef, hours, secondsRef, endSecondsRef]
   )
 
   React.useEffect(() => {
     let newMinutes: number = minutes
+    let newSeconds: number = seconds
     let newEndHours: number = endHours
     let newEndMinutes: number = endMinutes
+    let newEndSeconds: number = endSeconds
     if (hours === newEndHours && minutes === newEndMinutes) {
-      newEndMinutes = newMinutes + 1
+      newEndMinutes = newMinutes
+    }
+    if (hours === newEndHours && minutes > newEndMinutes) {
+      newEndMinutes = newMinutes
     }
     if (hours === newEndHours && minutes > newEndMinutes) {
       newEndMinutes = newMinutes + 1
     }
-    if (hours === newEndHours && newMinutes > 58) {
-      newMinutes = 58
+    if (
+      hours === newEndHours &&
+      minutes === newEndMinutes &&
+      seconds === newEndSeconds
+    ) {
+      newEndSeconds = seconds + 1
+    }
+    if (
+      hours === newEndHours &&
+      minutes === newEndMinutes &&
+      seconds > newEndSeconds
+    ) {
+      newEndSeconds = newSeconds
+    }
+    if (hours === newEndHours && minutes === newEndMinutes && newSeconds > 58) {
+      newSeconds = 58
     }
     if ((hours === 23 && newEndHours === 0) || hours > newEndHours) {
       newEndHours = hours
@@ -125,14 +164,28 @@ function TimeInputs({
     if (newEndMinutes > 59) {
       newEndMinutes = 59
     }
+    if (newEndSeconds > 59) {
+      newEndSeconds = 59
+    }
     onChange({
       hours,
       minutes: newMinutes,
+      seconds: newSeconds,
       endHours: newEndHours,
       endMinutes: newEndMinutes,
+      endSeconds: newEndSeconds,
       duration,
     })
-  }, [onChange, hours, minutes, endHours, endMinutes, duration])
+  }, [
+    onChange,
+    hours,
+    minutes,
+    endHours,
+    endMinutes,
+    seconds,
+    endSeconds,
+    duration,
+  ])
 
   return (
     <View style={[styles.columnContainer]}>
@@ -146,7 +199,7 @@ function TimeInputs({
             },
           ]}
         >
-          {`Bắt đầu`}
+          {textTimeStart}
         </Text>
       </View>
       <View
@@ -178,8 +231,10 @@ function TimeInputs({
             onChange({
               hours: newHours,
               minutes,
+              seconds,
               endHours,
               endMinutes,
+              endSeconds,
               duration,
             })
           }}
@@ -208,8 +263,42 @@ function TimeInputs({
             onChange({
               hours,
               minutes: newMinutes,
+              seconds,
               endHours,
               endMinutes,
+              endSeconds,
+              duration,
+            })
+          }}
+        />
+        <View style={styles.hoursAndMinutesSeparator}>
+          <View style={styles.spaceDot} />
+          <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
+          <View style={styles.betweenDot} />
+          <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
+          <View style={styles.spaceDot} />
+        </View>
+        <TimeInput
+          ref={endInput}
+          placeholder={'00'}
+          value={seconds}
+          clockType={clockTypes.seconds}
+          pressed={focused === clockTypes.seconds}
+          onPress={onFocusInput}
+          inputType={inputType}
+          onSubmitEditing={onSubmitEndInput}
+          onChanged={(newSecondsFromInput) => {
+            let newSeconds = newSecondsFromInput
+            if (newSecondsFromInput > 59 || endSeconds > 59) {
+              newSeconds = 59
+            }
+            onChange({
+              hours,
+              minutes,
+              seconds: newSeconds,
+              endHours,
+              endMinutes,
+              endSeconds,
               duration,
             })
           }}
@@ -235,7 +324,7 @@ function TimeInputs({
                 },
               ]}
             >
-              {`Thời lượng`}
+              {textDuration}
             </Text>
           </View>
           <View
@@ -261,8 +350,10 @@ function TimeInputs({
                 onChange({
                   hours,
                   minutes,
+                  seconds,
                   endHours,
                   endMinutes,
+                  endSeconds,
                   duration: newDuration,
                 })
               }}
@@ -297,8 +388,10 @@ function TimeInputs({
                 onChange({
                   hours,
                   minutes,
+                  seconds,
                   endHours,
                   endMinutes,
+                  endSeconds,
                   duration: newDuration,
                 })
               }}
@@ -318,7 +411,7 @@ function TimeInputs({
                 },
               ]}
             >
-              {`Kết thúc`}
+              {textTimeEnd}
             </Text>
           </View>
           <View
@@ -349,8 +442,10 @@ function TimeInputs({
                 onChange({
                   hours,
                   minutes,
+                  seconds,
                   endHours: newEndHours,
                   endMinutes,
+                  endSeconds,
                   duration,
                 })
               }}
@@ -383,8 +478,46 @@ function TimeInputs({
                 onChange({
                   hours,
                   minutes,
+                  seconds,
                   endMinutes: newEndMinutes,
                   endHours,
+                  endSeconds,
+                  duration,
+                })
+              }}
+            />
+            <View style={styles.hoursAndMinutesSeparator}>
+              <View style={styles.spaceDot} />
+              <View
+                style={[styles.dot, { backgroundColor: theme.colors.text }]}
+              />
+              <View style={styles.betweenDot} />
+              <View
+                style={[styles.dot, { backgroundColor: theme.colors.text }]}
+              />
+              <View style={styles.spaceDot} />
+            </View>
+            <TimeInput
+              ref={endInput}
+              placeholder={'00'}
+              value={endSeconds}
+              clockType={clockTypes.endSeconds}
+              pressed={focused === clockTypes.endSeconds}
+              onPress={onFocusInput}
+              inputType={inputType}
+              onSubmitEditing={onSubmitEndInput}
+              onChanged={(newEndSecondsFromInput) => {
+                let newEndSeconds = newEndSecondsFromInput
+                if (newEndSecondsFromInput > 59 || seconds > 59) {
+                  newEndSeconds = 59
+                }
+                onChange({
+                  hours,
+                  minutes,
+                  seconds,
+                  endHours,
+                  endMinutes,
+                  endSeconds: newEndSeconds,
                   duration,
                 })
               }}
@@ -434,8 +567,6 @@ const styles = StyleSheet.create({
   labelContainer: {
     width: '100%',
     justifyContent: 'flex-end',
-    paddingLeft: 10,
-    paddingRight: 10,
   },
 })
 

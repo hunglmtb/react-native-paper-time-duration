@@ -15,24 +15,33 @@ import TimeInputs from './TimeInputs'
 type onChangeFunc = ({
   hours,
   minutes,
+  seconds,
   duration: number,
   endHours,
   endMinutes,
+  endSeconds,
   focused,
 }: {
   hours: number
   minutes: number
+  seconds: number
   endHours?: number
   endMinutes?: number
+  endSeconds?: number
   duration?: number
   focused?: undefined | PossibleClockTypes
 }) => any
 
 function TimePicker({
+  textTimeStart,
+  textTimeEnd,
+  textDuration,
   hours,
   minutes,
+  seconds,
   endHours,
   endMinutes,
+  endSeconds,
   onFocusInput,
   focused,
   inputType,
@@ -40,13 +49,18 @@ function TimePicker({
   locale,
   duration,
 }: {
+  textTimeStart?: string
+  textTimeEnd?: string
+  textDuration?: string
   locale?: undefined | string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
   hours: number
   minutes: number
+  seconds: number
   endHours: number
   endMinutes: number
+  endSeconds: number
   onFocusInput: (type: PossibleClockTypes) => any
   onChange: onChangeFunc
   duration?: number
@@ -84,11 +98,16 @@ function TimePicker({
   return (
     <View style={isLandscape ? styles.rootLandscape : styles.rootPortrait}>
       <TimeInputs
+        textTimeStart={textTimeStart}
+        textTimeEnd={textTimeEnd}
+        textDuration={textDuration}
         inputType={inputType}
         hours={hours}
         minutes={minutes}
+        seconds={seconds}
         endHours={endHours}
         endMinutes={endMinutes}
+        endSeconds={endSeconds}
         is24Hour={is24Hour}
         onChange={onChange}
         onFocusInput={onFocusInput}
@@ -100,8 +119,10 @@ function TimePicker({
           <AnalogClock
             hours={toHourInputFormat(hours, is24Hour)}
             minutes={minutes}
+            seconds={seconds}
             endHours={toHourInputFormat(endHours, is24Hour)}
             endMinutes={endMinutes}
+            endSeconds={endSeconds}
             focused={focused}
             is24Hour={is24Hour}
             onChange={onInnerChange}
@@ -120,7 +141,7 @@ const styles = StyleSheet.create({
     width: 24 * 3 + 96 * 2 + 52 + circleSize,
   },
   rootPortrait: {},
-  clockContainer: { paddingTop: 36, paddingLeft: 12, paddingRight: 12 },
+  clockContainer: { paddingTop: 25, paddingLeft: 0, paddingRight: 0 },
 })
 
 export default React.memo(TimePicker)

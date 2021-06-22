@@ -15,12 +15,28 @@ import TimeInput from './TimeInput'
 import { useState } from 'react'
 
 function TimeKeyboardInput({
+  minDuration,
+  maxDuration,
+  minAfterSeconds,
+  maxAfterSeconds,
+  textDurationUp,
+  textDurationDown,
+  textAfterSecondUp,
+  textAfterSecondDown,
   inputType,
   onChange,
   duration,
   afterSecond,
   maxLength,
 }: {
+  minDuration: number
+  maxDuration: number
+  minAfterSeconds: number
+  maxAfterSeconds: number
+  textDurationUp?: string | React.ReactNode
+  textDurationDown?: string | React.ReactNode
+  textAfterSecondUp?: string | React.ReactNode
+  textAfterSecondDown?: string | React.ReactNode
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
   onFocusInput: (type: PossibleClockTypes) => any
@@ -40,8 +56,54 @@ function TimeKeyboardInput({
   const theme = useTheme()
   const { color } = useSwitchColors(true)
 
-  const [currentAfterSecond, setCurrentAfterSecond] = useState<number | undefined>(afterSecond)
-  const [currentDuration, setCurrentDuration] = useState<number | undefined>(duration)
+  const [currentAfterSecond, setCurrentAfterSecond] = useState<
+    number | undefined
+  >(afterSecond)
+  const [currentDuration, setCurrentDuration] = useState<number | undefined>(
+    duration
+  )
+
+  React.useEffect(() => {
+    let newCurrentAfterSecond = currentAfterSecond
+    let newCurrentDuration = currentDuration
+    if (newCurrentAfterSecond && newCurrentAfterSecond <= minAfterSeconds) {
+      newCurrentAfterSecond = minAfterSeconds
+    }
+    if (newCurrentAfterSecond && newCurrentAfterSecond >= maxAfterSeconds) {
+      newCurrentAfterSecond = maxAfterSeconds
+    }
+    if (newCurrentDuration && newCurrentDuration <= minDuration) {
+      newCurrentDuration = minDuration
+    }
+    if (newCurrentDuration && newCurrentDuration >= maxDuration) {
+      newCurrentDuration = maxDuration
+    }
+    onChange({
+      afterSecond: newCurrentAfterSecond,
+      duration: newCurrentDuration,
+    })
+    let intervalSetTime: any = null
+    if (
+      newCurrentAfterSecond !== currentAfterSecond ||
+      newCurrentDuration !== currentDuration
+    ) {
+      intervalSetTime = setInterval(() => {
+        setCurrentAfterSecond(newCurrentAfterSecond)
+        setCurrentDuration(newCurrentDuration)
+      }, 1000)
+    }
+    return () => clearInterval(intervalSetTime)
+  }, [
+    onChange,
+    minDuration,
+    maxDuration,
+    minAfterSeconds,
+    maxAfterSeconds,
+    setCurrentAfterSecond,
+    setCurrentDuration,
+    currentDuration,
+    currentAfterSecond,
+  ])
 
   return (
     <View style={[styles.inputContainer]}>
@@ -63,7 +125,7 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {`Sau`}
+              {textAfterSecondUp}
             </Text>
           </View>
           <TimeInput
@@ -97,15 +159,17 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {`Giây`}
+              {textAfterSecondDown}
             </Text>
           </View>
         </View>
       ) : null}
-      <View style={styles.hoursAndMinutesSeparator}>
-        <View style={styles.spaceDot} />
-        <View style={styles.spaceDot} />
-      </View>
+      {currentAfterSecond !== undefined && currentDuration !== undefined ? (
+        <View style={styles.hoursAndMinutesSeparator}>
+          <View style={styles.spaceDot} />
+          <View style={styles.spaceDot} />
+        </View>
+      ) : null}
       {currentDuration !== undefined && (
         <View>
           <View
@@ -124,7 +188,7 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {`Thời lượng`}
+              {textDurationUp}
             </Text>
           </View>
           <TimeInput
@@ -142,8 +206,8 @@ function TimeKeyboardInput({
               }
               setCurrentDuration(newDuration)
               onChange({
-                duration: newDuration,
                 afterSecond: currentAfterSecond,
+                duration: newDuration,
               })
             }}
           />
@@ -158,7 +222,7 @@ function TimeKeyboardInput({
                 },
               ]}
             >
-              {`Giây`}
+              {textDurationDown}
             </Text>
           </View>
         </View>
@@ -187,8 +251,6 @@ const styles = StyleSheet.create({
   labelContainer: {
     width: '100%',
     justifyContent: 'flex-end',
-    paddingLeft: 10,
-    paddingRight: 10,
   },
   textCenter: {
     textAlign: 'center',

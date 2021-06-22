@@ -69,14 +69,18 @@ function App({
   const [time, setTime] = React.useState<{
     hours: number | undefined;
     minutes: number | undefined;
+    seconds: number | undefined;
     endHours: number | undefined;
     endMinutes: number | undefined;
+    endSeconds: number | undefined;
     duration: number | undefined;
   }>({
     hours: undefined,
     minutes: undefined,
+    seconds: undefined,
     endHours: undefined,
     endMinutes: undefined,
+    endSeconds: undefined,
     duration: 128,
   });
   const [timeKeyboard, setTimeKeyboard] = React.useState<{
@@ -139,9 +143,9 @@ function App({
   );
 
   const onConfirmTime = React.useCallback(
-    ({ hours, minutes, endHours, endMinutes, duration }) => {
+    ({ hours, minutes, endHours, seconds, endMinutes, endSeconds, duration }) => {
       setTimeOpen(false);
-      setTime({ hours, minutes, endHours, endMinutes, duration });
+      setTime({ hours, minutes, endHours, seconds, endMinutes, endSeconds, duration });
     },
     [setTimeOpen, setTime]
   );
@@ -397,8 +401,13 @@ function App({
         onConfirm={onConfirmTime}
         hours={time.hours} // optional, default: current hours
         minutes={time.minutes} // optional, default: current minutes
+        seconds={time.seconds}
         endHours={time.endHours}
         endMinutes={time.endMinutes}
+        endSeconds={time.endSeconds}
+        textTimeStart={'Bắt đầu lúc'}
+        textTimeEnd={'Kết thúc lúc'}
+        textDuration={'Thời lượng'}
         // duration={time.duration}
         // label="Select time" // optional, default 'Select time'
         // cancelLabel="Cancel" // optional, default: 'Cancel'
@@ -413,6 +422,16 @@ function App({
         onConfirm={onConfirmTimeKeyboard}
         duration={timeKeyboard.duration}
         afterSecond={timeKeyboard.afterSecond}
+        textDurationUp={
+          <View>Sau</View>
+        }
+        minDuration={24}
+        maxDuration={128}
+        minAfterSeconds={56}
+        maxAfterSeconds={256}
+        footerLeft={
+          <Button color="red" onPress={() => setTimeKeyboardOpen(false)}>Convert</Button>
+        }
       />
     </>
   );

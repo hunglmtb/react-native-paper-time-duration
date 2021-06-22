@@ -12,6 +12,7 @@ import {
 import { Button, overlay, useTheme } from 'react-native-paper'
 import TimeKeyboard from './TimeKeyboard'
 import { clockTypes, inputTypes, PossibleClockTypes } from './timeUtils'
+import { ITimeKeyboardModalProps } from './picker'
 
 const supportedOrientations: any[] = [
   'portrait',
@@ -23,37 +24,26 @@ const supportedOrientations: any[] = [
 
 export function TimeKeyboardModal({
   visible,
+  footerLeft,
+  minDuration = 0,
+  maxDuration = 24 * 60 * 60,
+  minAfterSeconds = 0,
+  maxAfterSeconds = 24 * 60 * 60,
   onDismiss,
   onConfirm,
   label = 'Select time',
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   animationType = 'none',
+  textDurationUp = 'Sau',
+  textDurationDown = 'Giây',
+  textAfterSecondUp = 'Thời lượng',
+  textAfterSecondDown = 'Giây',
   locale,
   duration,
   afterSecond,
   maxLength,
-}: {
-  locale?: undefined | string
-  label?: string
-  cancelLabel?: string
-  confirmLabel?: string
-  hours?: number | undefined
-  minutes?: number | undefined
-  visible: boolean | undefined
-  onDismiss: () => any
-  onConfirm: ({
-    afterSecond,
-    duration,
-  }: {
-    afterSecond: number
-    duration: number
-  }) => any
-  animationType?: 'slide' | 'fade' | 'none'
-  duration?: number | undefined
-  afterSecond?: number
-  maxLength?: number
-}) {
+}: ITimeKeyboardModalProps) {
   const theme = useTheme()
 
   const [inputType] = React.useState(inputTypes.picker)
@@ -132,6 +122,14 @@ export function TimeKeyboardModal({
               </View>
               <View style={styles.timePickerContainer}>
                 <TimeKeyboard
+                  minDuration={minDuration}
+                  maxDuration={maxDuration}
+                  minAfterSeconds={minAfterSeconds}
+                  maxAfterSeconds={maxAfterSeconds}
+                  textDurationUp={textDurationUp}
+                  textDurationDown={textDurationDown}
+                  textAfterSecondUp={textAfterSecondUp}
+                  textAfterSecondDown={textAfterSecondDown}
                   locale={locale}
                   inputType={inputType}
                   focused={focused}
@@ -143,6 +141,7 @@ export function TimeKeyboardModal({
                 />
               </View>
               <View style={styles.bottom}>
+                <View>{footerLeft}</View>
                 <View style={styles.fill} />
                 <Button onPress={onDismiss}>{cancelLabel}</Button>
                 <Button

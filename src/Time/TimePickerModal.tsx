@@ -19,6 +19,7 @@ import {
   PossibleInputTypes,
   reverseInputTypes,
 } from './timeUtils'
+import { ITimePickerModalProps } from './picker'
 
 const supportedOrientations: any[] = [
   'portrait',
@@ -30,50 +31,39 @@ const supportedOrientations: any[] = [
 
 export function TimePickerModal({
   visible,
+  pickerType,
+  iconToggle,
+  footerLeft,
   onDismiss,
   onConfirm,
   hours,
   minutes,
+  seconds,
   endHours,
   endMinutes,
+  endSeconds,
   label = 'Select time',
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   animationType = 'none',
+  textTimeStart = 'Bắt đầu',
+  textTimeEnd = 'Kết thúc',
+  textDuration = 'Thời lượng',
   locale,
   duration,
-}: {
-  locale?: undefined | string
-  label?: string
-  cancelLabel?: string
-  confirmLabel?: string
-  hours?: number | undefined
-  minutes?: number | undefined
-  endHours?: number | undefined
-  endMinutes?: number | undefined
-  visible: boolean | undefined
-  onDismiss: () => any
-  onConfirm: ({
-    hours,
-    minutes,
-    endHours,
-    endMinutes,
-    duration,
-  }: {
-    hours: number
-    minutes: number
-    endHours: number
-    endMinutes: number
-    duration: number
-  }) => any
-  animationType?: 'slide' | 'fade' | 'none'
-  duration?: number
-}) {
+}: ITimePickerModalProps) {
   const theme = useTheme()
 
   const [inputType, setInputType] = React.useState<PossibleInputTypes>(
-    inputTypes.picker
+    pickerType || inputTypes.picker
   )
+
+  React.useEffect(() => {
+    if (pickerType) {
+      setInputType(pickerType)
+    }
+  }, [pickerType])
+
   const [focused, setFocused] = React.useState<PossibleClockTypes>(
     clockTypes.hours
   )
@@ -81,11 +71,17 @@ export function TimePickerModal({
   const [localMinutes, setLocalMinutes] = React.useState<number>(
     getMinutes(minutes)
   )
+  const [localSeconds, setLocalSeconds] = React.useState<number>(
+    getSeconds(seconds)
+  )
   const [localEndHours, setLocalEndHours] = React.useState<number>(
     getHours(endHours)
   )
   const [localEndMinutes, setLocalEndMinutes] = React.useState<number>(
     getMinutes(endMinutes)
+  )
+  const [localEndSeconds, setLocalEndSeconds] = React.useState<number>(
+    getSeconds(endSeconds)
   )
   const [localDuration, setLocalDuration] = React.useState<number>(0)
 
@@ -98,12 +94,20 @@ export function TimePickerModal({
   }, [setLocalMinutes, minutes])
 
   React.useEffect(() => {
+    setLocalEndSeconds(getSeconds(seconds))
+  }, [setLocalSeconds, seconds])
+
+  React.useEffect(() => {
     setLocalEndHours(getHours(endHours))
   }, [setLocalEndHours, endHours])
 
   React.useEffect(() => {
     setLocalEndMinutes(getMinutes(endMinutes))
   }, [setLocalEndMinutes, endMinutes])
+
+  React.useEffect(() => {
+    setLocalEndSeconds(getSeconds(endSeconds))
+  }, [setLocalEndSeconds, endSeconds])
 
   React.useEffect(() => {
     setLocalDuration(duration || 0)
@@ -118,8 +122,10 @@ export function TimePickerModal({
       focused?: PossibleClockTypes | undefined
       hours: number
       minutes: number
+      seconds: number
       endHours?: number
       endMinutes?: number
+      endSeconds?: number
       duration?: number
     }) => {
       if (params.focused) {
@@ -128,8 +134,10 @@ export function TimePickerModal({
 
       setLocalHours(params.hours)
       setLocalMinutes(params.minutes)
+      setLocalSeconds(params.seconds)
       setLocalEndHours(params.endHours || 0)
       setLocalEndMinutes(params.endMinutes || 0)
+      setLocalEndSeconds(params.endSeconds || 0)
       setLocalDuration(params.duration || 0)
     },
     [setFocused, setLocalHours, setLocalMinutes, setLocalDuration]
@@ -185,23 +193,33 @@ export function TimePickerModal({
                   locale={locale}
                   inputType={inputType}
                   focused={focused}
+                  textTimeStart={textTimeStart}
+                  textTimeEnd={textTimeEnd}
+                  textDuration={textDuration}
                   hours={localHours}
                   minutes={localMinutes}
+                  seconds={localSeconds}
                   endHours={localEndHours}
                   endMinutes={localEndMinutes}
+                  endSeconds={localEndSeconds}
                   onChange={onChange}
                   onFocusInput={onFocusInput}
                   duration={duration}
                 />
               </View>
               <View style={styles.bottom}>
-                <IconButton
-                  icon={inputTypeIcons[reverseInputTypes[inputType]]}
-                  onPress={() => setInputType(reverseInputTypes[inputType])}
-                  size={24}
-                  style={styles.inputTypeToggle}
-                  accessibilityLabel="toggle keyboard"
-                />
+                {iconToggle ? (
+                  iconToggle
+                ) : (
+                  <IconButton
+                    icon={inputTypeIcons[reverseInputTypes[inputType]]}
+                    onPress={() => setInputType(reverseInputTypes[inputType])}
+                    size={24}
+                    style={styles.inputTypeToggle}
+                    accessibilityLabel="toggle keyboard"
+                  />
+                )}
+                {footerLeft}
                 <View style={styles.fill} />
                 <Button onPress={onDismiss}>{cancelLabel}</Button>
                 <Button
@@ -209,8 +227,10 @@ export function TimePickerModal({
                     onConfirm({
                       hours: localHours,
                       minutes: localMinutes,
+                      seconds: localSeconds,
                       endHours: localEndHours,
                       endMinutes: localEndMinutes,
+                      endSeconds: localEndSeconds,
                       duration: localDuration,
                     })
                   }
@@ -230,6 +250,11 @@ function getMinutes(minutes: number | undefined | null): number {
   return minutes === undefined || minutes === null
     ? new Date().getMinutes()
     : minutes
+}
+function getSeconds(seconds: number | undefined | null): number {
+  return seconds === undefined || seconds === null
+    ? new Date().getSeconds()
+    : seconds
 }
 function getHours(hours: number | undefined | null): number {
   return hours === undefined || hours === null ? new Date().getHours() : hours
