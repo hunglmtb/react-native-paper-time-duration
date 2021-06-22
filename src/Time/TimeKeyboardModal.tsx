@@ -12,6 +12,7 @@ import {
 import { Button, overlay, useTheme } from 'react-native-paper'
 import TimeKeyboard from './TimeKeyboard'
 import { clockTypes, inputTypes, PossibleClockTypes } from './timeUtils'
+import { ITimeKeyboardModalProps } from './picker'
 
 const supportedOrientations: any[] = [
   'portrait',
@@ -42,36 +43,7 @@ export function TimeKeyboardModal({
   duration,
   afterSecond,
   maxLength,
-}: {
-  locale?: undefined | string
-  label?: string
-  minDuration?: number
-  maxDuration?: number
-  minAfterSeconds?: number
-  maxAfterSeconds?: number
-  footerLeft?: string | React.ReactNode
-  cancelLabel?: string
-  confirmLabel?: string
-  textDurationUp?: string | React.ReactNode
-  textDurationDown?: string | React.ReactNode
-  textAfterSecondUp?: string | React.ReactNode
-  textAfterSecondDown?: string | React.ReactNode
-  hours?: number | undefined
-  minutes?: number | undefined
-  visible: boolean | undefined
-  onDismiss: () => any
-  onConfirm: ({
-    afterSecond,
-    duration,
-  }: {
-    afterSecond: number
-    duration: number
-  }) => any
-  animationType?: 'slide' | 'fade' | 'none'
-  duration?: number | undefined
-  afterSecond?: number
-  maxLength?: number
-}) {
+}: ITimeKeyboardModalProps) {
   const theme = useTheme()
 
   const [inputType] = React.useState(inputTypes.picker)
