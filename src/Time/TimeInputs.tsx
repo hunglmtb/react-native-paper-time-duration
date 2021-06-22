@@ -17,6 +17,7 @@ import {
   toHourInputFormat,
   toHourOutputFormat,
   useSwitchColors,
+  compareEndTimeMidnight,
 } from './timeUtils'
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
@@ -132,50 +133,64 @@ function TimeInputs({
     let newEndHours: number = endHours
     let newEndMinutes: number = endMinutes
     let newEndSeconds: number = endSeconds
-    if (hours === newEndHours && minutes === newEndMinutes) {
-      newEndMinutes = newMinutes
+
+    if (!compareEndTimeMidnight(newEndHours, newEndMinutes, newEndSeconds)) {
+      if (hours === newEndHours && minutes === newEndMinutes) {
+        newEndMinutes = newMinutes
+      }
+      if (hours === newEndHours && minutes > newEndMinutes) {
+        newEndMinutes = newMinutes
+      }
+      if (hours === newEndHours && minutes > newEndMinutes) {
+        newEndMinutes = newMinutes + 1
+      }
+      if (
+        hours === newEndHours &&
+        minutes === newEndMinutes &&
+        seconds === newEndSeconds
+      ) {
+        newEndSeconds = seconds + 1
+      }
+      if (
+        hours === newEndHours &&
+        minutes === newEndMinutes &&
+        seconds > newEndSeconds
+      ) {
+        newEndSeconds = newSeconds
+      }
+      if (
+        hours === newEndHours &&
+        minutes === newEndMinutes &&
+        newSeconds > 58
+      ) {
+        newSeconds = 58
+      }
+      if ((hours === 23 && newEndHours === 0) || hours > newEndHours) {
+        newEndHours = hours
+      }
+      if (newEndMinutes > 59) {
+        newEndMinutes = 59
+      }
+      if (newEndSeconds > 59) {
+        newEndSeconds = 59
+      }
     }
-    if (hours === newEndHours && minutes > newEndMinutes) {
-      newEndMinutes = newMinutes
+
+    const setInterValChange = setInterval(() => {
+      onChange({
+        hours,
+        minutes: newMinutes,
+        seconds: newSeconds,
+        endHours: newEndHours,
+        endMinutes: newEndMinutes,
+        endSeconds: newEndSeconds,
+        duration,
+      })
+    }, 500)
+
+    return () => {
+      clearInterval(setInterValChange)
     }
-    if (hours === newEndHours && minutes > newEndMinutes) {
-      newEndMinutes = newMinutes + 1
-    }
-    if (
-      hours === newEndHours &&
-      minutes === newEndMinutes &&
-      seconds === newEndSeconds
-    ) {
-      newEndSeconds = seconds + 1
-    }
-    if (
-      hours === newEndHours &&
-      minutes === newEndMinutes &&
-      seconds > newEndSeconds
-    ) {
-      newEndSeconds = newSeconds
-    }
-    if (hours === newEndHours && minutes === newEndMinutes && newSeconds > 58) {
-      newSeconds = 58
-    }
-    if ((hours === 23 && newEndHours === 0) || hours > newEndHours) {
-      newEndHours = hours
-    }
-    if (newEndMinutes > 59) {
-      newEndMinutes = 59
-    }
-    if (newEndSeconds > 59) {
-      newEndSeconds = 59
-    }
-    onChange({
-      hours,
-      minutes: newMinutes,
-      seconds: newSeconds,
-      endHours: newEndHours,
-      endMinutes: newEndMinutes,
-      endSeconds: newEndSeconds,
-      duration,
-    })
   }, [
     onChange,
     hours,
