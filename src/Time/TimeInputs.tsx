@@ -17,6 +17,7 @@ import {
   toHourInputFormat,
   toHourOutputFormat,
   useSwitchColors,
+  compareStartEndTimeMidnight,
 } from './timeUtils'
 import TimeInput from './TimeInput'
 import AmPmSwitcher from './AmPmSwitcher'
@@ -142,11 +143,22 @@ function TimeInputs({
       newEndMinutes = newMinutes + 1
     }
     if (
-      hours === newEndHours &&
-      minutes === newEndMinutes &&
-      seconds === newEndSeconds
+      !compareStartEndTimeMidnight(
+        hours,
+        minutes,
+        seconds,
+        newEndHours,
+        newEndMinutes,
+        newEndSeconds
+      )
     ) {
-      newEndSeconds = seconds + 1
+      if (
+        hours === newEndHours &&
+        minutes === newEndMinutes &&
+        seconds === newEndSeconds
+      ) {
+        newEndSeconds = seconds + 1
+      }
     }
     if (
       hours === newEndHours &&
@@ -167,6 +179,7 @@ function TimeInputs({
     if (newEndSeconds > 59) {
       newEndSeconds = 59
     }
+
     onChange({
       hours,
       minutes: newMinutes,
