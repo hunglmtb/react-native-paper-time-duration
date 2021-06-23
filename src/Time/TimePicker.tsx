@@ -58,9 +58,9 @@ function TimePicker({
   hours: number
   minutes: number
   seconds: number
-  endHours: number
-  endMinutes: number
-  endSeconds: number
+  endHours: number | undefined
+  endMinutes: number | undefined
+  endSeconds: number | undefined
   onFocusInput: (type: PossibleClockTypes) => any
   onChange: onChangeFunc
   duration?: number
@@ -82,7 +82,12 @@ function TimePicker({
   const onInnerChange = React.useCallback<onChangeFunc>(
     (params) => {
       params.hours = toHourOutputFormat(params.hours, hours, is24Hour)
-      if (params.endHours && params.endHours >= 0) {
+      if (
+        params.endHours &&
+        params.endHours >= 0 &&
+        endHours &&
+        endHours >= 0
+      ) {
         params.endHours = toHourOutputFormat(
           params.endHours,
           endHours,
@@ -120,7 +125,11 @@ function TimePicker({
             hours={toHourInputFormat(hours, is24Hour)}
             minutes={minutes}
             seconds={seconds}
-            endHours={toHourInputFormat(endHours, is24Hour)}
+            endHours={
+              endHours !== undefined
+                ? toHourInputFormat(endHours, is24Hour)
+                : undefined
+            }
             endMinutes={endMinutes}
             endSeconds={endSeconds}
             focused={focused}

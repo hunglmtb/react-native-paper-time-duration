@@ -31,7 +31,6 @@ export interface ITimeKeyboardModalProps {
   maxLength?: number
 }
 
-
 export interface ITimePickerModalProps {
   locale?: undefined | string
   pickerType: 'picker' | 'keyboard'
@@ -63,9 +62,9 @@ export interface ITimePickerModalProps {
     hours: number
     minutes: number
     seconds: number
-    endHours: number
-    endMinutes: number
-    endSeconds: number
+    endHours?: number | undefined
+    endMinutes?: number | undefined
+    endSeconds?: number | undefined
     duration: number
   }) => any
   animationType?: 'slide' | 'fade' | 'none'

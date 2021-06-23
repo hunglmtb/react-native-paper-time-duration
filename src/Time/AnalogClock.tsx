@@ -42,9 +42,9 @@ function AnalogClock({
   hours: number
   minutes: number
   seconds: number
-  endHours: number
-  endMinutes: number
-  endSeconds: number
+  endHours: any
+  endMinutes: any
+  endSeconds: any
   focused: PossibleClockTypes
   is24Hour: boolean
   onChange: ({
@@ -60,9 +60,9 @@ function AnalogClock({
     hours: number
     minutes: number
     seconds: number
-    endHours?: number
-    endMinutes?: number
-    endSeconds?: number
+    endHours?: any
+    endMinutes?: any
+    endSeconds?: any
     focused?: undefined | PossibleClockTypes
     duration?: number
   }) => any

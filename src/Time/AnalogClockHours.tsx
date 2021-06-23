@@ -9,7 +9,7 @@ function AnalogClockHours({
   hours,
 }: {
   is24Hour: boolean
-  hours: number
+  hours: number | undefined
 }) {
   const outerRange = getHourNumbers(false, circleSize, 12)
   const innerRange = getHourNumbers(true, circleSize, 12)

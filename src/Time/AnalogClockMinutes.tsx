@@ -4,7 +4,7 @@ import { Text } from 'react-native-paper'
 import { circleSize } from './AnalogClock'
 import { useTextColorOnPrimary } from '../utils'
 
-function AnalogClockMinutes({ minutes }: { minutes: number }) {
+function AnalogClockMinutes({ minutes }: { minutes: any }) {
   const range = getMinuteNumbers(circleSize, 12)
   const color = useTextColorOnPrimary()
   return (
