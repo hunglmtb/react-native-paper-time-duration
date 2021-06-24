@@ -78,9 +78,9 @@ function App({
     hours: undefined,
     minutes: undefined,
     seconds: undefined,
-    endHours: undefined,
-    endMinutes: undefined,
-    endSeconds: undefined,
+    endHours: 5,
+    endMinutes: 2,
+    endSeconds: 6,
     duration: 128,
   });
   const [timeKeyboard, setTimeKeyboard] = React.useState<{
@@ -402,6 +402,7 @@ function App({
         hours={time.hours} // optional, default: current hours
         minutes={time.minutes} // optional, default: current minutes
         seconds={time.seconds}
+        // duration={time.duration}
         endHours={time.endHours}
         endMinutes={time.endMinutes}
         endSeconds={time.endSeconds}

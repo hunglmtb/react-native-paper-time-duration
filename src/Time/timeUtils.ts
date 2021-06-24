@@ -240,9 +240,9 @@ export function toHourOutputFormat(
 }
 
 export function compareEndTimeMidnight(
-  endHours: number,
-  endMinutes: number,
-  endSeconds: number
+  endHours: number = 0,
+  endMinutes: number = 0,
+  endSeconds: number = 0
 ): boolean {
   return !!(
     Math.abs(endHours) === 0 &&

@@ -74,15 +74,9 @@ export function TimePickerModal({
   const [localSeconds, setLocalSeconds] = React.useState<number>(
     getSeconds(seconds)
   )
-  const [localEndHours, setLocalEndHours] = React.useState<number>(
-    getHours(endHours)
-  )
-  const [localEndMinutes, setLocalEndMinutes] = React.useState<number>(
-    getMinutes(endMinutes)
-  )
-  const [localEndSeconds, setLocalEndSeconds] = React.useState<number>(
-    getSeconds(endSeconds)
-  )
+  const [localEndHours, setLocalEndHours] = React.useState(endHours)
+  const [localEndMinutes, setLocalEndMinutes] = React.useState(endMinutes)
+  const [localEndSeconds, setLocalEndSeconds] = React.useState(endSeconds)
   const [localDuration, setLocalDuration] = React.useState<number>(0)
 
   React.useEffect(() => {
@@ -98,15 +92,15 @@ export function TimePickerModal({
   }, [setLocalSeconds, seconds])
 
   React.useEffect(() => {
-    setLocalEndHours(getHours(endHours))
+    setLocalEndHours(endHours)
   }, [setLocalEndHours, endHours])
 
   React.useEffect(() => {
-    setLocalEndMinutes(getMinutes(endMinutes))
+    setLocalEndMinutes(endMinutes)
   }, [setLocalEndMinutes, endMinutes])
 
   React.useEffect(() => {
-    setLocalEndSeconds(getSeconds(endSeconds))
+    setLocalEndSeconds(endSeconds)
   }, [setLocalEndSeconds, endSeconds])
 
   React.useEffect(() => {
@@ -135,9 +129,9 @@ export function TimePickerModal({
       setLocalHours(params.hours)
       setLocalMinutes(params.minutes)
       setLocalSeconds(params.seconds)
-      setLocalEndHours(params.endHours || 0)
-      setLocalEndMinutes(params.endMinutes || 0)
-      setLocalEndSeconds(params.endSeconds || 0)
+      setLocalEndHours(params.endHours)
+      setLocalEndMinutes(params.endMinutes)
+      setLocalEndSeconds(params.endSeconds)
       setLocalDuration(params.duration || 0)
     },
     [
