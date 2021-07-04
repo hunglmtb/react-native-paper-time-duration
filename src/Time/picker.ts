@@ -34,7 +34,7 @@ export interface ITimeKeyboardModalProps {
 export interface ITimePickerModalProps {
   locale?: undefined | string
   enableEndltStart?: boolean
-  pickerType: 'picker' | 'keyboard'
+  pickerType?: 'picker' | 'keyboard'
   iconToggle?: string | React.ReactNode
   footerLeft?: string | React.ReactNode
   label?: string

@@ -32,7 +32,7 @@ const supportedOrientations: any[] = [
 export function TimePickerModal({
   visible,
   enableEndltStart = false,
-  pickerType,
+  pickerType = 'picker',
   iconToggle,
   footerLeft,
   onDismiss,
