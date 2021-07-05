@@ -28,6 +28,7 @@ function TimeInputs({
   textTimeStart,
   textTimeEnd,
   textDuration,
+  enableEndltStart,
   hours,
   minutes,
   seconds,
@@ -44,6 +45,7 @@ function TimeInputs({
   textTimeStart?: string
   textTimeEnd?: string
   textDuration?: string
+  enableEndltStart: boolean
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
   hours: number
@@ -139,7 +141,10 @@ function TimeInputs({
       newEndMinutes !== undefined &&
       newEndSeconds !== undefined
     ) {
-      if (!compareEndTimeMidnight(newEndHours, newEndMinutes, newEndSeconds)) {
+      if (
+        !enableEndltStart &&
+        !compareEndTimeMidnight(newEndHours, newEndMinutes, newEndSeconds)
+      ) {
         if (hours === newEndHours && minutes === newEndMinutes) {
           newEndMinutes = newMinutes
         }
@@ -198,6 +203,7 @@ function TimeInputs({
       clearInterval(setInterValChange)
     }
   }, [
+    enableEndltStart,
     onChange,
     hours,
     minutes,
