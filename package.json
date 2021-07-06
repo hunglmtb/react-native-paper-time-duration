@@ -1,6 +1,6 @@
 {
   "name": "react-native-paper-time-duration",
-  "version": "0.2.1218",
+  "version": "0.2.1219",
   "description": "Time and duration Picker for React Native Paper",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -28,7 +28,8 @@
     "release": "bob build && dotenv release-it --",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "bootstrap": "yarn example && yarn && yarn pods",
+    "pl": "bob build && yarn publish"
   },
   "keywords": [
     "react-native",
