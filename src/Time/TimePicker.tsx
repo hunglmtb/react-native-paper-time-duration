@@ -36,6 +36,7 @@ function TimePicker({
   textTimeStart,
   textTimeEnd,
   textDuration,
+  enableEndltStart,
   hours,
   minutes,
   seconds,
@@ -52,6 +53,7 @@ function TimePicker({
   textTimeStart?: string
   textTimeEnd?: string
   textDuration?: string
+  enableEndltStart: boolean
   locale?: undefined | string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
@@ -106,6 +108,7 @@ function TimePicker({
         textTimeStart={textTimeStart}
         textTimeEnd={textTimeEnd}
         textDuration={textDuration}
+        enableEndltStart={enableEndltStart}
         inputType={inputType}
         hours={hours}
         minutes={minutes}

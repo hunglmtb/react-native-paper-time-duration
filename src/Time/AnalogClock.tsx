@@ -90,7 +90,7 @@ function AnalogClock({
   const onChangeRef = useLatest(onChange)
 
   const onPointerMove = React.useCallback(
-    (e: GestureResponderEvent, final: boolean) => {
+    (e: GestureResponderEvent, final: boolean | string) => {
       let x = e.nativeEvent.locationX
       let y = e.nativeEvent.locationY
       let angle = getAngle(x, y, circleSize)
@@ -121,12 +121,15 @@ function AnalogClock({
             endHours: endHoursRef.current,
             endMinutes: endMinutesRef.current,
             endSeconds: endSecondsRef.current,
-            focused: final ? clockTypes.minutes : undefined,
+            focused:
+              typeof final === 'string' && final === clockTypes.hours
+                ? clockTypes.minutes
+                : undefined,
           })
         }
       } else if (focusedRef.current === clockTypes.minutes) {
         let pickedMinutes = getMinutes(angle)
-        if (minutesRef.current !== pickedMinutes) {
+        if (minutesRef.current !== pickedMinutes || final) {
           onChangeRef.current({
             hours: hoursRef.current,
             minutes: pickedMinutes,
@@ -134,7 +137,10 @@ function AnalogClock({
             endHours: endHoursRef.current,
             endMinutes: endMinutesRef.current,
             endSeconds: endSecondsRef.current,
-            focused: final ? clockTypes.seconds : undefined,
+            focused:
+              typeof final === 'string' && final === clockTypes.minutes
+                ? clockTypes.seconds
+                : undefined,
           })
         }
       } else if (focusedRef.current === clockTypes.seconds) {
@@ -177,12 +183,15 @@ function AnalogClock({
             endHours: pickedHours,
             endMinutes: endMinutesRef.current,
             endSeconds: endSecondsRef.current,
-            focused: final ? clockTypes.endMinutes : undefined,
+            focused:
+              typeof final === 'string' && final === clockTypes.endHours
+                ? clockTypes.endMinutes
+                : undefined,
           })
         }
       } else if (focusedRef.current === clockTypes.endMinutes) {
         let pickedEndMinutes = getMinutes(angle)
-        if (endMinutesRef.current !== pickedEndMinutes) {
+        if (endMinutesRef.current !== pickedEndMinutes || final) {
           onChangeRef.current({
             hours: hoursRef.current,
             minutes: minutesRef.current,
@@ -190,7 +199,10 @@ function AnalogClock({
             endHours: endHoursRef.current,
             endMinutes: pickedEndMinutes,
             endSeconds: endSecondsRef.current,
-            focused: final ? clockTypes.endSeconds : undefined,
+            focused:
+              typeof final === 'string' && final === clockTypes.endMinutes
+                ? clockTypes.endSeconds
+                : undefined,
           })
         }
       } else if (focusedRef.current === clockTypes.endSeconds) {
@@ -224,7 +236,7 @@ function AnalogClock({
     PanResponder.create({
       onPanResponderGrant: (e) => onPointerMove(e, false),
       onPanResponderMove: (e) => onPointerMove(e, false),
-      onPanResponderRelease: (e) => onPointerMove(e, true),
+      onPanResponderRelease: (e) => onPointerMove(e, focusedRef.current),
 
       onStartShouldSetPanResponder: returnTrue,
       onStartShouldSetPanResponderCapture: () => false,

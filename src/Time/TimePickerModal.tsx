@@ -31,7 +31,8 @@ const supportedOrientations: any[] = [
 
 export function TimePickerModal({
   visible,
-  pickerType,
+  enableEndltStart = false,
+  pickerType = 'picker',
   iconToggle,
   footerLeft,
   onDismiss,
@@ -194,6 +195,7 @@ export function TimePickerModal({
               <View style={styles.timePickerContainer}>
                 <TimePicker
                   locale={locale}
+                  enableEndltStart={enableEndltStart}
                   inputType={inputType}
                   focused={focused}
                   textTimeStart={textTimeStart}
