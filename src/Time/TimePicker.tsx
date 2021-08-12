@@ -33,6 +33,7 @@ type onChangeFunc = ({
 }) => any
 
 function TimePicker({
+  enable12Hours,
   textTimeStart,
   textTimeEnd,
   textDuration,
@@ -50,6 +51,7 @@ function TimePicker({
   locale,
   duration,
 }: {
+  enable12Hours?: boolean
   textTimeStart?: string
   textTimeEnd?: string
   textDuration?: string
@@ -105,6 +107,7 @@ function TimePicker({
   return (
     <View style={isLandscape ? styles.rootLandscape : styles.rootPortrait}>
       <TimeInputs
+        enable12Hours={enable12Hours}
         textTimeStart={textTimeStart}
         textTimeEnd={textTimeEnd}
         textDuration={textDuration}

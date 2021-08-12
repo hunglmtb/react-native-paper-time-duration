@@ -25,6 +25,7 @@ import { useLatest } from '../utils'
 import { useState } from 'react'
 
 function TimeInputs({
+  enable12Hours,
   textTimeStart,
   textTimeEnd,
   textDuration,
@@ -42,6 +43,7 @@ function TimeInputs({
   is24Hour,
   duration,
 }: {
+  enable12Hours?: boolean
   textTimeStart?: string
   textTimeEnd?: string
   textDuration?: string
@@ -330,7 +332,7 @@ function TimeInputs({
             })
           }}
         />
-        {!is24Hour ? (
+        {!is24Hour && enable12Hours ? (
           <>
             <View style={styles.spaceBetweenInputsAndSwitcher} />
             <AmPmSwitcher hours={hours} onChange={onChangeHours} />
@@ -552,7 +554,7 @@ function TimeInputs({
                 })
               }}
             />
-            {!is24Hour && endHours ? (
+            {!is24Hour && endHours && enable12Hours ? (
               <>
                 <View style={styles.spaceBetweenInputsAndSwitcher} />
                 <AmPmSwitcher hours={endHours} onChange={onChangeEndHours} />
