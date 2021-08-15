@@ -76,6 +76,7 @@ function TimePicker({
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
+      hour12: false,
     })
     const formatted = formatter.format(new Date(Date.UTC(2020, 1, 1, 23)))
     return formatted.includes('23')
