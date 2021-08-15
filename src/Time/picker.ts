@@ -32,7 +32,6 @@ export interface ITimeKeyboardModalProps {
 }
 
 export interface ITimePickerModalProps {
-  enable12Hours?: boolean
   locale?: undefined | string
   enableEndltStart?: boolean
   pickerType?: 'picker' | 'keyboard'

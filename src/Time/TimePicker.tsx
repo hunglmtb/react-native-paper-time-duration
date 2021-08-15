@@ -33,7 +33,6 @@ type onChangeFunc = ({
 }) => any
 
 function TimePicker({
-  enable12Hours,
   textTimeStart,
   textTimeEnd,
   textDuration,
@@ -51,7 +50,6 @@ function TimePicker({
   locale,
   duration,
 }: {
-  enable12Hours?: boolean
   textTimeStart?: string
   textTimeEnd?: string
   textDuration?: string
@@ -78,6 +76,7 @@ function TimePicker({
       hour: '2-digit',
       minute: '2-digit',
       timeZone: 'UTC',
+      hour12: false,
     })
     const formatted = formatter.format(new Date(Date.UTC(2020, 1, 1, 23)))
     return formatted.includes('23')
@@ -107,7 +106,6 @@ function TimePicker({
   return (
     <View style={isLandscape ? styles.rootLandscape : styles.rootPortrait}>
       <TimeInputs
-        enable12Hours={enable12Hours}
         textTimeStart={textTimeStart}
         textTimeEnd={textTimeEnd}
         textDuration={textDuration}
