@@ -19,6 +19,8 @@ function TimeKeyboardInput({
   maxDuration,
   minAfterSeconds,
   maxAfterSeconds,
+  turnOnTime,
+  turnOffTime,
   textDurationUp,
   textDurationDown,
   textAfterSecondUp,
@@ -33,6 +35,8 @@ function TimeKeyboardInput({
   maxDuration: number
   minAfterSeconds: number
   maxAfterSeconds: number
+  turnOnTime?: number
+  turnOffTime?: number
   textDurationUp?: string | React.ReactNode
   textDurationDown?: string | React.ReactNode
   textAfterSecondUp?: string | React.ReactNode
@@ -43,10 +47,14 @@ function TimeKeyboardInput({
   onChange: ({
     afterSecond,
     duration,
+    turnOnTime,
+    turnOffTime,
   }: {
     afterSecond?: number
     duration?: number
-  }) => any
+    turnOnTime: number | undefined
+    turnOffTime: number | undefined
+  }) => void
   duration?: number | undefined
   afterSecond?: number
   maxLength?: number
@@ -56,12 +64,10 @@ function TimeKeyboardInput({
   const theme = useTheme()
   const { color } = useSwitchColors(true)
 
-  const [currentAfterSecond, setCurrentAfterSecond] = useState<
-    number | undefined
-  >(afterSecond)
-  const [currentDuration, setCurrentDuration] = useState<number | undefined>(
-    duration
-  )
+  const [currentAfterSecond, setCurrentAfterSecond] = useState<number | undefined>(afterSecond)
+  const [currentDuration, setCurrentDuration] = useState<number | undefined>(duration)
+  const [currentTurnOnTime, setCurrentTurnOnTime] = useState<number | undefined>(turnOnTime)
+  const [currentTurnOffTime, setCurrentTurnOffTime] = useState<number | undefined>(turnOffTime)
 
   React.useEffect(() => {
     let newCurrentAfterSecond = currentAfterSecond
@@ -81,6 +87,8 @@ function TimeKeyboardInput({
     onChange({
       afterSecond: newCurrentAfterSecond,
       duration: newCurrentDuration,
+      turnOnTime: currentTurnOnTime,
+      turnOffTime: currentTurnOffTime,
     })
     let intervalSetTime: any = null
     if (
@@ -103,135 +111,273 @@ function TimeKeyboardInput({
     setCurrentDuration,
     currentDuration,
     currentAfterSecond,
+    currentTurnOnTime,
+    currentTurnOffTime,
   ])
 
   return (
-    <View style={[styles.inputContainer]}>
-      {afterSecond !== undefined ? (
-        <View>
-          <View
-            style={[
-              styles.labelContainer,
-              isLandscape && styles.inputContainerLandscape,
-            ]}
-          >
-            <Text
-              selectable={false}
+    <View style={styles.container}>
+       <View style={[styles.inputContainer]}>
+        {afterSecond !== undefined ? (
+          <View>
+            <View
               style={[
-                styles.textCenter,
-                {
-                  ...theme.fonts.medium,
-                  color: color,
-                },
+                styles.labelContainer,
+                isLandscape && styles.inputContainerLandscape,
               ]}
             >
-              {textAfterSecondUp}
-            </Text>
+              <Text
+                selectable={false}
+                style={[
+                  styles.textCenter,
+                  {
+                    ...theme.fonts.medium,
+                    color: color,
+                  },
+                ]}
+              >
+                {textAfterSecondUp}
+              </Text>
+            </View>
+            <TimeInput
+              maxLength={maxLength}
+              placeholder={'00'}
+              value={currentAfterSecond || 0}
+              clockType={clockTypes.minutes}
+              pressed={false}
+              inputType={inputType}
+              blurOnSubmit={false}
+              onChanged={(newAfterSecondInput) => {
+                let newAfterSecond = newAfterSecondInput
+                if (newAfterSecondInput > 24 * 60 * 60) {
+                  newAfterSecond = 24 * 60 * 60
+                }
+                setCurrentAfterSecond(newAfterSecond)
+                onChange({
+                  afterSecond: newAfterSecond,
+                  duration: currentDuration,
+                  turnOnTime: currentTurnOnTime,
+                  turnOffTime: currentTurnOffTime
+                })
+              }}
+            />
+            <View style={styles.labelContainer}>
+              <Text
+                selectable={false}
+                style={[
+                  styles.textCenter,
+                  {
+                    ...theme.fonts.medium,
+                    color: color,
+                  },
+                ]}
+              >
+                {textAfterSecondDown}
+              </Text>
+            </View>
           </View>
-          <TimeInput
-            maxLength={maxLength}
-            placeholder={'00'}
-            value={currentAfterSecond || 0}
-            clockType={clockTypes.minutes}
-            pressed={false}
-            inputType={inputType}
-            blurOnSubmit={false}
-            onChanged={(newAfterSecondInput) => {
-              let newAfterSecond = newAfterSecondInput
-              if (newAfterSecondInput > 24 * 60 * 60) {
-                newAfterSecond = 24 * 60 * 60
-              }
-              setCurrentAfterSecond(newAfterSecond)
-              onChange({
-                afterSecond: newAfterSecond,
-                duration: currentDuration,
-              })
-            }}
-          />
-          <View style={styles.labelContainer}>
-            <Text
-              selectable={false}
+        ) : null}
+        {currentAfterSecond !== undefined && currentDuration !== undefined ? (
+          <View style={styles.hoursAndMinutesSeparator}>
+            <View style={styles.spaceDot} />
+            <View style={styles.spaceDot} />
+          </View>
+        ) : null}
+        {currentDuration !== undefined && (
+          <View>
+            <View
               style={[
-                styles.textCenter,
-                {
-                  ...theme.fonts.medium,
-                  color: color,
-                },
+                styles.labelContainer,
+                isLandscape && styles.inputContainerLandscape,
               ]}
             >
-              {textAfterSecondDown}
-            </Text>
+              <Text
+                selectable={false}
+                style={[
+                  styles.textCenter,
+                  {
+                    ...theme.fonts.medium,
+                    color: color,
+                  },
+                ]}
+              >
+                {textDurationUp}
+              </Text>
+            </View>
+            <TimeInput
+              maxLength={maxLength}
+              placeholder={'00'}
+              value={currentDuration}
+              clockType={clockTypes.minutes}
+              pressed={false}
+              inputType={inputType}
+              blurOnSubmit={false}
+              onChanged={(newDurationInput) => {
+                let newDuration = newDurationInput
+                if (newDurationInput > 24 * 60 * 60) {
+                  newDuration = 24 * 60 * 60
+                }
+                setCurrentDuration(newDuration)
+                onChange({
+                  afterSecond: currentAfterSecond,
+                  duration: newDuration,
+                  turnOnTime: currentTurnOnTime,
+                  turnOffTime: currentTurnOffTime
+                })
+              }}
+            />
+            <View style={styles.labelContainer}>
+              <Text
+                selectable={false}
+                style={[
+                  styles.textCenter,
+                  {
+                    ...theme.fonts.medium,
+                    color: color,
+                  },
+                ]}
+              >
+                {textDurationDown}
+              </Text>
+            </View>
           </View>
-        </View>
-      ) : null}
-      {currentAfterSecond !== undefined && currentDuration !== undefined ? (
-        <View style={styles.hoursAndMinutesSeparator}>
-          <View style={styles.spaceDot} />
-          <View style={styles.spaceDot} />
-        </View>
-      ) : null}
-      {currentDuration !== undefined && (
-        <View>
-          <View
-            style={[
-              styles.labelContainer,
-              isLandscape && styles.inputContainerLandscape,
-            ]}
-          >
-            <Text
-              selectable={false}
+        )}
+      </View>
+      <View style={[styles.inputContainer, styles.inputTurnTime]}>
+        {turnOnTime !== undefined && (
+          <View>
+            <View
               style={[
-                styles.textCenter,
-                {
-                  ...theme.fonts.medium,
-                  color: color,
-                },
+                styles.labelContainer,
+                isLandscape && styles.inputContainerLandscape,
               ]}
             >
-              {textDurationUp}
-            </Text>
+              <Text
+                selectable={false}
+                style={[
+                  styles.textCenter,
+                  {
+                    ...theme.fonts.medium,
+                    color: color,
+                  },
+                ]}
+              >
+                Bật
+              </Text>
+            </View>
+            <TimeInput
+              maxLength={maxLength}
+              placeholder={'00'}
+              value={turnOnTime}
+              clockType={clockTypes.minutes}
+              pressed={false}
+              inputType={inputType}
+              blurOnSubmit={false}
+              onChanged={(newTurnOnTimeInput) => {
+                let newTurnOnTime = newTurnOnTimeInput
+                if (newTurnOnTimeInput > 24 * 60 * 60) {
+                  newTurnOnTime = 24 * 60 * 60
+                }
+                setCurrentTurnOnTime(newTurnOnTime)
+                onChange({
+                  afterSecond: currentAfterSecond,
+                  duration: currentDuration,
+                  turnOffTime: currentTurnOffTime,
+                  turnOnTime: newTurnOnTime,
+                })
+              }}
+            />
+            <View style={styles.labelContainer}>
+              <Text
+                selectable={false}
+                style={[
+                  styles.textCenter,
+                  {
+                    ...theme.fonts.medium,
+                    color: color,
+                  },
+                ]}
+              >
+                Giây
+              </Text>
+            </View>
           </View>
-          <TimeInput
-            maxLength={maxLength}
-            placeholder={'00'}
-            value={currentDuration}
-            clockType={clockTypes.minutes}
-            pressed={false}
-            inputType={inputType}
-            blurOnSubmit={false}
-            onChanged={(newDurationInput) => {
-              let newDuration = newDurationInput
-              if (newDurationInput > 24 * 60 * 60) {
-                newDuration = 24 * 60 * 60
-              }
-              setCurrentDuration(newDuration)
-              onChange({
-                afterSecond: currentAfterSecond,
-                duration: newDuration,
-              })
-            }}
-          />
-          <View style={styles.labelContainer}>
-            <Text
-              selectable={false}
+        )}
+        {turnOnTime !== undefined && turnOffTime !== undefined ? (
+          <View style={styles.hoursAndMinutesSeparator}>
+            <View style={styles.spaceDot} />
+            <View style={styles.spaceDot} />
+          </View>
+        ) : null}
+        {turnOffTime !== undefined && (
+          <View>
+            <View
               style={[
-                styles.textCenter,
-                {
-                  ...theme.fonts.medium,
-                  color: color,
-                },
+                styles.labelContainer,
+                isLandscape && styles.inputContainerLandscape,
               ]}
             >
-              {textDurationDown}
-            </Text>
+              <Text
+                selectable={false}
+                style={[
+                  styles.textCenter,
+                  {
+                    ...theme.fonts.medium,
+                    color: color,
+                  },
+                ]}
+              >
+                Tắt
+              </Text>
+            </View>
+            <TimeInput
+              maxLength={maxLength}
+              placeholder={'00'}
+              value={turnOffTime}
+              clockType={clockTypes.minutes}
+              pressed={false}
+              inputType={inputType}
+              blurOnSubmit={false}
+              onChanged={(newTurnOffTimeInput) => {
+                let newTurnOffTime = newTurnOffTimeInput
+                if (newTurnOffTimeInput > 24 * 60 * 60) {
+                  newTurnOffTime = 24 * 60 * 60
+                }
+                setCurrentTurnOffTime(newTurnOffTime)
+                onChange({
+                  afterSecond: currentAfterSecond,
+                  duration: currentDuration,
+                  turnOnTime: currentTurnOnTime,
+                  turnOffTime: newTurnOffTime,
+                })
+              }}
+            />
+            <View style={styles.labelContainer}>
+              <Text
+                selectable={false}
+                style={[
+                  styles.textCenter,
+                  {
+                    ...theme.fonts.medium,
+                    color: color,
+                  },
+                ]}
+              >
+                Giây
+              </Text>
+            </View>
           </View>
-        </View>
-      )}
+        )}
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -254,6 +400,9 @@ const styles = StyleSheet.create({
   },
   textCenter: {
     textAlign: 'center',
+  },
+  inputTurnTime: {
+    marginTop: 20,
   },
 })
 
