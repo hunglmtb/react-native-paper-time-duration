@@ -25,6 +25,10 @@ function TimeKeyboardInput({
   textDurationDown,
   textAfterSecondUp,
   textAfterSecondDown,
+  textTurnOnTimeUp,
+  textTurnOnTimeDown,
+  textTurnOffTimeUp,
+  textTurnOffTimeDown,
   inputType,
   onChange,
   duration,
@@ -41,6 +45,10 @@ function TimeKeyboardInput({
   textDurationDown?: string | React.ReactNode
   textAfterSecondUp?: string | React.ReactNode
   textAfterSecondDown?: string | React.ReactNode
+  textTurnOnTimeUp?: string | React.ReactNode
+  textTurnOnTimeDown?: string | React.ReactNode
+  textTurnOffTimeUp?: string | React.ReactNode
+  textTurnOffTimeDown?: string | React.ReactNode
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
   onFocusInput: (type: PossibleClockTypes) => any
@@ -64,10 +72,18 @@ function TimeKeyboardInput({
   const theme = useTheme()
   const { color } = useSwitchColors(true)
 
-  const [currentAfterSecond, setCurrentAfterSecond] = useState<number | undefined>(afterSecond)
-  const [currentDuration, setCurrentDuration] = useState<number | undefined>(duration)
-  const [currentTurnOnTime, setCurrentTurnOnTime] = useState<number | undefined>(turnOnTime)
-  const [currentTurnOffTime, setCurrentTurnOffTime] = useState<number | undefined>(turnOffTime)
+  const [currentAfterSecond, setCurrentAfterSecond] = useState<
+    number | undefined
+  >(afterSecond)
+  const [currentDuration, setCurrentDuration] = useState<number | undefined>(
+    duration
+  )
+  const [currentTurnOnTime, setCurrentTurnOnTime] = useState<
+    number | undefined
+  >(turnOnTime)
+  const [currentTurnOffTime, setCurrentTurnOffTime] = useState<
+    number | undefined
+  >(turnOffTime)
 
   React.useEffect(() => {
     let newCurrentAfterSecond = currentAfterSecond
@@ -117,7 +133,7 @@ function TimeKeyboardInput({
 
   return (
     <View style={styles.container}>
-       <View style={[styles.inputContainer]}>
+      <View style={[styles.inputContainer]}>
         {afterSecond !== undefined ? (
           <View>
             <View
@@ -157,7 +173,7 @@ function TimeKeyboardInput({
                   afterSecond: newAfterSecond,
                   duration: currentDuration,
                   turnOnTime: currentTurnOnTime,
-                  turnOffTime: currentTurnOffTime
+                  turnOffTime: currentTurnOffTime,
                 })
               }}
             />
@@ -222,7 +238,7 @@ function TimeKeyboardInput({
                   afterSecond: currentAfterSecond,
                   duration: newDuration,
                   turnOnTime: currentTurnOnTime,
-                  turnOffTime: currentTurnOffTime
+                  turnOffTime: currentTurnOffTime,
                 })
               }}
             />
@@ -262,7 +278,7 @@ function TimeKeyboardInput({
                   },
                 ]}
               >
-                Bật
+                {textTurnOnTimeUp}
               </Text>
             </View>
             <TimeInput
@@ -298,7 +314,7 @@ function TimeKeyboardInput({
                   },
                 ]}
               >
-                Giây
+                {textTurnOnTimeDown}
               </Text>
             </View>
           </View>
@@ -327,7 +343,7 @@ function TimeKeyboardInput({
                   },
                 ]}
               >
-                Tắt
+                {textTurnOffTimeUp}
               </Text>
             </View>
             <TimeInput
@@ -363,7 +379,7 @@ function TimeKeyboardInput({
                   },
                 ]}
               >
-                Giây
+                {textTurnOffTimeDown}
               </Text>
             </View>
           </View>

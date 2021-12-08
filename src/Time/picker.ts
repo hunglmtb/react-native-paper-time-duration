@@ -16,6 +16,10 @@ export interface ITimeKeyboardModalProps {
   textDurationDown?: string | React.ReactNode
   textAfterSecondUp?: string | React.ReactNode
   textAfterSecondDown?: string | React.ReactNode
+  textTurnOnTimeUp?: string | React.ReactNode
+  textTurnOnTimeDown?: string | React.ReactNode
+  textTurnOffTimeUp?: string | React.ReactNode
+  textTurnOffTimeDown?: string | React.ReactNode
   hours?: number | undefined
   minutes?: number | undefined
   visible: boolean | undefined

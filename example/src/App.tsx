@@ -88,7 +88,7 @@ function App({
     duration?: number | undefined;
     turnOnTime: number | undefined;
     turnOffTime: number | undefined;
-  }>({ afterSecond: 0, duration: 128, turnOnTime: undefined, turnOffTime: undefined });
+  }>({ afterSecond: 0, duration: 128, turnOnTime: 12, turnOffTime: 12 });
   const [timeOpen, setTimeOpen] = React.useState(false);
   const [rangeOpen, setRangeOpen] = React.useState(false);
   const [rangeExcludeOpen, setRangeExcludeOpen] = React.useState(false);
@@ -425,6 +425,10 @@ function App({
         onConfirm={onConfirmTimeKeyboard}
         duration={timeKeyboard.duration}
         afterSecond={timeKeyboard.afterSecond}
+        textTurnOnTimeUp={'Bật'}
+        textTurnOnTimeDown={'Giây'}
+        textTurnOffTimeUp={'Bật'}
+        textTurnOffTimeDown={'Phút'}
         turnOnTime={timeKeyboard.turnOnTime}
         turnOffTime={timeKeyboard.turnOffTime}
         textDurationUp={

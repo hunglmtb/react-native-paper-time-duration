@@ -29,6 +29,10 @@ function TimeKeyboard({
   textDurationDown,
   textAfterSecondUp,
   textAfterSecondDown,
+  textTurnOnTimeUp,
+  textTurnOnTimeDown,
+  textTurnOffTimeUp,
+  textTurnOffTimeDown,
   onFocusInput,
   focused,
   inputType,
@@ -47,6 +51,10 @@ function TimeKeyboard({
   textDurationDown?: string | React.ReactNode
   textAfterSecondUp?: string | React.ReactNode
   textAfterSecondDown?: string | React.ReactNode
+  textTurnOnTimeUp?: string | React.ReactNode
+  textTurnOnTimeDown?: string | React.ReactNode
+  textTurnOffTimeUp?: string | React.ReactNode
+  textTurnOffTimeDown?: string | React.ReactNode
   locale?: undefined | string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
@@ -72,6 +80,10 @@ function TimeKeyboard({
         textDurationDown={textDurationDown}
         textAfterSecondUp={textAfterSecondUp}
         textAfterSecondDown={textAfterSecondDown}
+        textTurnOnTimeUp={textTurnOnTimeUp}
+        textTurnOnTimeDown={textTurnOnTimeDown}
+        textTurnOffTimeUp={textTurnOffTimeUp}
+        textTurnOffTimeDown={textTurnOffTimeDown}
         inputType={inputType}
         onChange={onChange}
         onFocusInput={onFocusInput}

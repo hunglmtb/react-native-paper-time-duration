@@ -41,6 +41,10 @@ export function TimeKeyboardModal({
   textDurationDown = 'Giây',
   textAfterSecondUp = 'Thời lượng',
   textAfterSecondDown = 'Giây',
+  textTurnOnTimeUp = 'Bật',
+  textTurnOnTimeDown = 'Giây',
+  textTurnOffTimeUp = 'Tắt',
+  textTurnOffTimeDown = 'Giây',
   locale,
   duration,
   afterSecond,
@@ -55,8 +59,12 @@ export function TimeKeyboardModal({
   )
   const [localDuration, setLocalDuration] = React.useState<number>(0)
   const [localAfterSecond, setLocalAfterSecond] = React.useState<number>(0)
-  const [localTurnOnTime, setLocalTurnOnTime] = React.useState<number | undefined>()
-  const [localTurnOffTime, setLocalTurnOffTime] = React.useState<number | undefined>()
+  const [localTurnOnTime, setLocalTurnOnTime] = React.useState<
+    number | undefined
+  >()
+  const [localTurnOffTime, setLocalTurnOffTime] = React.useState<
+    number | undefined
+  >()
 
   React.useEffect(() => {
     setLocalDuration(duration || 0)
@@ -79,13 +87,23 @@ export function TimeKeyboardModal({
     []
   )
   const onChange = React.useCallback(
-    (params: { duration?: number; afterSecond?: number, turnOnTime?: number, turnOffTime?: number }) => {
+    (params: {
+      duration?: number
+      afterSecond?: number
+      turnOnTime?: number
+      turnOffTime?: number
+    }) => {
       setLocalDuration(params.duration || 0)
       setLocalAfterSecond(params.afterSecond || 0)
       setLocalTurnOnTime(params.turnOnTime || undefined)
       setLocalTurnOffTime(params.turnOffTime || undefined)
     },
-    [setLocalDuration, setLocalAfterSecond, setLocalTurnOnTime, setLocalTurnOffTime]
+    [
+      setLocalDuration,
+      setLocalAfterSecond,
+      setLocalTurnOnTime,
+      setLocalTurnOffTime,
+    ]
   )
 
   return (
@@ -146,6 +164,10 @@ export function TimeKeyboardModal({
                   textDurationDown={textDurationDown}
                   textAfterSecondUp={textAfterSecondUp}
                   textAfterSecondDown={textAfterSecondDown}
+                  textTurnOnTimeUp={textTurnOnTimeUp}
+                  textTurnOnTimeDown={textTurnOnTimeDown}
+                  textTurnOffTimeUp={textTurnOffTimeUp}
+                  textTurnOffTimeDown={textTurnOffTimeDown}
                   locale={locale}
                   inputType={inputType}
                   focused={focused}
