@@ -9,20 +9,30 @@ import TimeKeyboardInput from './TimeKeyboardInput'
 type onChangeFunc = ({
   afterSecond,
   duration,
+  turnOnTime,
+  turnOffTime,
 }: {
   afterSecond?: number
   duration?: number
-}) => any
+  turnOnTime: number | undefined
+  turnOffTime: number | undefined
+}) => void
 
 function TimeKeyboard({
   minDuration,
   maxDuration,
   minAfterSeconds,
   maxAfterSeconds,
+  turnOnTime,
+  turnOffTime,
   textDurationUp,
   textDurationDown,
   textAfterSecondUp,
   textAfterSecondDown,
+  textTurnOnTimeUp,
+  textTurnOnTimeDown,
+  textTurnOffTimeUp,
+  textTurnOffTimeDown,
   onFocusInput,
   focused,
   inputType,
@@ -35,10 +45,16 @@ function TimeKeyboard({
   maxDuration: number
   minAfterSeconds: number
   maxAfterSeconds: number
+  turnOnTime?: number
+  turnOffTime?: number
   textDurationUp?: string | React.ReactNode
   textDurationDown?: string | React.ReactNode
   textAfterSecondUp?: string | React.ReactNode
   textAfterSecondDown?: string | React.ReactNode
+  textTurnOnTimeUp?: string | React.ReactNode
+  textTurnOnTimeDown?: string | React.ReactNode
+  textTurnOffTimeUp?: string | React.ReactNode
+  textTurnOffTimeDown?: string | React.ReactNode
   locale?: undefined | string
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
@@ -58,10 +74,16 @@ function TimeKeyboard({
         maxDuration={maxDuration}
         minAfterSeconds={minAfterSeconds}
         maxAfterSeconds={maxAfterSeconds}
+        turnOnTime={turnOnTime}
+        turnOffTime={turnOffTime}
         textDurationUp={textDurationUp}
         textDurationDown={textDurationDown}
         textAfterSecondUp={textAfterSecondUp}
         textAfterSecondDown={textAfterSecondDown}
+        textTurnOnTimeUp={textTurnOnTimeUp}
+        textTurnOnTimeDown={textTurnOnTimeDown}
+        textTurnOffTimeUp={textTurnOffTimeUp}
+        textTurnOffTimeDown={textTurnOffTimeDown}
         inputType={inputType}
         onChange={onChange}
         onFocusInput={onFocusInput}

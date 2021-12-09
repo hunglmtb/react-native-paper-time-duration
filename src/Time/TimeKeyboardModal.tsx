@@ -29,6 +29,8 @@ export function TimeKeyboardModal({
   maxDuration = 24 * 60 * 60,
   minAfterSeconds = 0,
   maxAfterSeconds = 24 * 60 * 60,
+  turnOnTime,
+  turnOffTime,
   onDismiss,
   onConfirm,
   label = 'Select time',
@@ -39,6 +41,10 @@ export function TimeKeyboardModal({
   textDurationDown = 'Giây',
   textAfterSecondUp = 'Thời lượng',
   textAfterSecondDown = 'Giây',
+  textTurnOnTimeUp = 'Bật',
+  textTurnOnTimeDown = 'Giây',
+  textTurnOffTimeUp = 'Tắt',
+  textTurnOffTimeDown = 'Giây',
   locale,
   duration,
   afterSecond,
@@ -53,6 +59,12 @@ export function TimeKeyboardModal({
   )
   const [localDuration, setLocalDuration] = React.useState<number>(0)
   const [localAfterSecond, setLocalAfterSecond] = React.useState<number>(0)
+  const [localTurnOnTime, setLocalTurnOnTime] = React.useState<
+    number | undefined
+  >()
+  const [localTurnOffTime, setLocalTurnOffTime] = React.useState<
+    number | undefined
+  >()
 
   React.useEffect(() => {
     setLocalDuration(duration || 0)
@@ -62,16 +74,36 @@ export function TimeKeyboardModal({
     setLocalAfterSecond(afterSecond || 0)
   }, [setLocalAfterSecond, afterSecond])
 
+  React.useEffect(() => {
+    setLocalTurnOnTime(turnOnTime || undefined)
+  }, [setLocalTurnOnTime, turnOnTime])
+
+  React.useEffect(() => {
+    setLocalTurnOffTime(turnOffTime || undefined)
+  }, [setLocalTurnOffTime, turnOffTime])
+
   const onFocusInput = React.useCallback(
     (type: PossibleClockTypes) => setFocused(type),
     []
   )
   const onChange = React.useCallback(
-    (params: { duration?: number; afterSecond?: number }) => {
+    (params: {
+      duration?: number
+      afterSecond?: number
+      turnOnTime?: number
+      turnOffTime?: number
+    }) => {
       setLocalDuration(params.duration || 0)
       setLocalAfterSecond(params.afterSecond || 0)
+      setLocalTurnOnTime(params.turnOnTime || undefined)
+      setLocalTurnOffTime(params.turnOffTime || undefined)
     },
-    [setLocalDuration, setLocalAfterSecond]
+    [
+      setLocalDuration,
+      setLocalAfterSecond,
+      setLocalTurnOnTime,
+      setLocalTurnOffTime,
+    ]
   )
 
   return (
@@ -126,10 +158,16 @@ export function TimeKeyboardModal({
                   maxDuration={maxDuration}
                   minAfterSeconds={minAfterSeconds}
                   maxAfterSeconds={maxAfterSeconds}
+                  turnOnTime={turnOnTime}
+                  turnOffTime={turnOffTime}
                   textDurationUp={textDurationUp}
                   textDurationDown={textDurationDown}
                   textAfterSecondUp={textAfterSecondUp}
                   textAfterSecondDown={textAfterSecondDown}
+                  textTurnOnTimeUp={textTurnOnTimeUp}
+                  textTurnOnTimeDown={textTurnOnTimeDown}
+                  textTurnOffTimeUp={textTurnOffTimeUp}
+                  textTurnOffTimeDown={textTurnOffTimeDown}
                   locale={locale}
                   inputType={inputType}
                   focused={focused}
@@ -149,6 +187,8 @@ export function TimeKeyboardModal({
                     onConfirm({
                       afterSecond: localAfterSecond,
                       duration: localDuration,
+                      turnOnTime: localTurnOnTime,
+                      turnOffTime: localTurnOffTime,
                     })
                   }
                 >

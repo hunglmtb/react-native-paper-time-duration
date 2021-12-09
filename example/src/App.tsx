@@ -86,7 +86,9 @@ function App({
   const [timeKeyboard, setTimeKeyboard] = React.useState<{
     afterSecond: number | undefined;
     duration?: number | undefined;
-  }>({ afterSecond: 0, duration: 128 });
+    turnOnTime: number | undefined;
+    turnOffTime: number | undefined;
+  }>({ afterSecond: 0, duration: 128, turnOnTime: 12, turnOffTime: 12 });
   const [timeOpen, setTimeOpen] = React.useState(false);
   const [rangeOpen, setRangeOpen] = React.useState(false);
   const [rangeExcludeOpen, setRangeExcludeOpen] = React.useState(false);
@@ -151,9 +153,9 @@ function App({
   );
 
   const onConfirmTimeKeyboard = React.useCallback(
-    ({ afterSecond, duration }) => {
+    ({ afterSecond, duration, turnOnTime, turnOffTime }) => {
       setTimeKeyboardOpen(false);
-      setTimeKeyboard({ afterSecond, duration });
+      setTimeKeyboard({ afterSecond, duration, turnOnTime, turnOffTime });
     },
     [setTimeKeyboardOpen, setTimeKeyboard]
   );
@@ -423,15 +425,21 @@ function App({
         onConfirm={onConfirmTimeKeyboard}
         duration={timeKeyboard.duration}
         afterSecond={timeKeyboard.afterSecond}
+        textTurnOnTimeUp={'Bật'}
+        textTurnOnTimeDown={'Giây'}
+        textTurnOffTimeUp={'Bật'}
+        textTurnOffTimeDown={'Phút'}
+        turnOnTime={timeKeyboard.turnOnTime}
+        turnOffTime={timeKeyboard.turnOffTime}
         textDurationUp={
           <View>Sau</View>
         }
-        minDuration={24}
+        minDuration={2}
         maxDuration={128}
         minAfterSeconds={56}
         maxAfterSeconds={256}
         footerLeft={
-          <Button color="red" onPress={() => setTimeKeyboardOpen(false)}>Convert</Button>
+          <Switch value={dark} onValueChange={onToggleDarkMode} />
         }
       />
     </>
