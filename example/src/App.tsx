@@ -24,14 +24,11 @@ import {
   Portal,
 } from 'react-native-paper';
 
-import {
-  DatePickerModal,
-  DatePickerModalContent,
-  TimePickerModal,
-  TimeKeyboardModal,
-  // @ts-ignore
-} from 'react-native-paper-time-duration';
 import { addMonths } from '../../src/Date/dateUtils';
+import TimeKeyboardModal from '../../src/Time/TimeKeyboardModal'
+import { TimePickerModal } from '../../src/Time/TimePickerModal'
+import DatePickerModal from '../../src/Date/DatePickerModal'
+import { DatePickerModalContent } from '../../src/Date/DatePickerModalContent'
 
 const baseDate = new Date();
 const rangeExcludeDateStart = new Date(
@@ -427,7 +424,7 @@ function App({
         afterSecond={timeKeyboard.afterSecond}
         textTurnOnTimeUp={'Bật'}
         textTurnOnTimeDown={'Giây'}
-        textTurnOffTimeUp={'Bật'}
+        textTurnOffTimeUp={'Tắt'}
         textTurnOffTimeDown={'Phút'}
         turnOnTime={timeKeyboard.turnOnTime}
         turnOffTime={timeKeyboard.turnOffTime}
