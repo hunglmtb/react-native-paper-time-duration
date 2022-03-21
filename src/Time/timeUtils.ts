@@ -11,7 +11,8 @@ export const hourTypes: HourTypeMap = {
   pm: 'pm',
 }
 
-export function getHourType(hours: number): PossibleHourTypes | undefined {
+export function getHourType(hours?: number): PossibleHourTypes | undefined {
+  if(hours===undefined) return undefined
   if (hours >= 0 && hours <= 12) {
     return hourTypes.am
   }

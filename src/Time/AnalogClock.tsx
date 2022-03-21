@@ -39,8 +39,8 @@ function AnalogClock({
   is24Hour,
   onChange,
 }: {
-  hours: number
-  minutes: number
+  hours?: number
+  minutes?: number
   seconds?: number
   endHours?: number
   endMinutes?: number
@@ -57,9 +57,9 @@ function AnalogClock({
     focused,
     duration,
   }: {
-    hours: number
-    minutes: number
-    seconds: number
+    hours?: number
+    minutes?: number
+    seconds?: number
     endHours?: any
     endMinutes?: any
     endSeconds?: any
@@ -70,10 +70,15 @@ function AnalogClock({
   const theme = useTheme()
 
   // used to make pointer shorter if hours are selected and above 12
+
   const shortPointer =
-    ((focused === clockTypes.hours ? hours : endHours) === 0 ||
-      (focused === clockTypes.hours ? hours : endHours) > 12) &&
-    is24Hour
+    is24Hour &&
+    ((focused === clockTypes.hours &&
+      hours !== undefined &&
+      (hours === 0 || hours > 12)) ||
+      (focused === clockTypes.endHours &&
+        endHours !== undefined &&
+        (endHours === 0 || endHours > 12)))
 
   const clockRef = React.useRef<View | null>(null)
 
@@ -254,7 +259,7 @@ function AnalogClock({
       ? 33
       : 0
   const pointerNumber =
-    focused === clockTypes.hours
+    (focused === clockTypes.hours
       ? hours
       : focused === clockTypes.endHours
       ? endHours
@@ -264,7 +269,7 @@ function AnalogClock({
       ? endMinutes
       : focused === clockTypes.seconds
       ? seconds
-      : endSeconds
+      : endSeconds) || 0
 
   const degreesPerNumber =
     focused === clockTypes.hours ? 30 : focused === clockTypes.endHours ? 30 : 6
