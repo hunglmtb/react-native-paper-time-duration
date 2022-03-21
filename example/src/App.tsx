@@ -29,6 +29,7 @@ import TimeKeyboardModal from '../../src/Time/TimeKeyboardModal'
 import { TimePickerModal } from '../../src/Time/TimePickerModal'
 import DatePickerModal from '../../src/Date/DatePickerModal'
 import { DatePickerModalContent } from '../../src/Date/DatePickerModalContent'
+import { useState } from 'react'
 
 const baseDate = new Date();
 const rangeExcludeDateStart = new Date(
@@ -80,6 +81,9 @@ function App({
     endSeconds: 6,
     duration: 128,
   });
+
+  const [startText, setStartText] = useState<string>("Bắt đầu");
+
   const [timeKeyboard, setTimeKeyboard] = React.useState<{
     afterSecond: number | undefined;
     duration?: number | undefined;
@@ -303,12 +307,40 @@ function App({
             </Button>
             <View style={styles.buttonSeparator} />
             <Button
-              onPress={() => setTimeOpen(true)}
-              uppercase={false}
+              onPress={() => {
+                const now = new Date()
+                setStartText("Bắt đầu")
+                setTime({...time,hours: now.getHours(), minutes: now.getMinutes(),seconds: now.getSeconds(), endSeconds: 0})
+                setTimeOpen(true)
+              }}              uppercase={false}
               mode="outlined"
               style={styles.pickButton}
             >
               Pick time
+            </Button>
+            <Button
+              onPress={() => {
+                setStartText("Bắt đầu")
+                setTime({...time, seconds: undefined, endSeconds: undefined})
+                setTimeOpen(true)
+              }}
+              uppercase={false}
+              mode="outlined"
+              style={styles.pickButton}
+            >
+              hide second
+            </Button>
+            <Button
+              onPress={() => {
+                setStartText("Bắt đầu Ngay Bây Giờ")
+                setTime({...time, hours: undefined, minutes: undefined,seconds: undefined, endSeconds: undefined})
+                setTimeOpen(true)
+              }}
+              uppercase={false}
+              mode="outlined"
+              style={styles.pickButton}
+            >
+              start now
             </Button>
             <View style={styles.buttonSeparator} />
             <Button
@@ -405,7 +437,7 @@ function App({
         endHours={time.endHours}
         endMinutes={time.endMinutes}
         endSeconds={time.endSeconds}
-        textTimeStart={'Bắt đầu lúc'}
+        textTimeStart={startText}
         textTimeEnd={'Kết thúc lúc'}
         textDuration={'Thời lượng'}
         // duration={time.duration}

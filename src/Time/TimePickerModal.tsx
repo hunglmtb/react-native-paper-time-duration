@@ -68,45 +68,21 @@ export function TimePickerModal({
   const [focused, setFocused] = React.useState<PossibleClockTypes>(
     clockTypes.hours
   )
-  const [localHours, setLocalHours] = React.useState<number>(getHours(hours))
-  const [localMinutes, setLocalMinutes] = React.useState<number>(
-    getMinutes(minutes)
-  )
-  const [localSeconds, setLocalSeconds] = React.useState<number>(
-    getSeconds(seconds)
-  )
+  const [localHours, setLocalHours] = React.useState(hours)
+  const [localMinutes, setLocalMinutes] = React.useState(minutes)
+  const [localSeconds, setLocalSeconds] = React.useState(seconds)
   const [localEndHours, setLocalEndHours] = React.useState(endHours)
   const [localEndMinutes, setLocalEndMinutes] = React.useState(endMinutes)
   const [localEndSeconds, setLocalEndSeconds] = React.useState(endSeconds)
   const [localDuration, setLocalDuration] = React.useState<number>(0)
 
-  React.useEffect(() => {
-    setLocalHours(getHours(hours))
-  }, [setLocalHours, hours])
-
-  React.useEffect(() => {
-    setLocalMinutes(getMinutes(minutes))
-  }, [setLocalMinutes, minutes])
-
-  React.useEffect(() => {
-    setLocalSeconds(getSeconds(seconds))
-  }, [setLocalSeconds, seconds])
-
-  React.useEffect(() => {
-    setLocalEndHours(endHours)
-  }, [setLocalEndHours, endHours])
-
-  React.useEffect(() => {
-    setLocalEndMinutes(endMinutes)
-  }, [setLocalEndMinutes, endMinutes])
-
-  React.useEffect(() => {
-    setLocalEndSeconds(endSeconds)
-  }, [setLocalEndSeconds, endSeconds])
-
-  React.useEffect(() => {
-    setLocalDuration(duration || 0)
-  }, [setLocalDuration, duration])
+  React.useEffect(() => setLocalHours(hours), [hours])
+  React.useEffect(() => setLocalMinutes(minutes), [minutes])
+  React.useEffect(() => setLocalSeconds(seconds), [seconds])
+  React.useEffect(() => setLocalEndHours(endHours), [endHours])
+  React.useEffect(() => setLocalEndMinutes(endMinutes), [endMinutes])
+  React.useEffect(() => setLocalEndSeconds(endSeconds), [endSeconds])
+  React.useEffect(() => setLocalDuration(duration || 0), [duration])
 
   const onFocusInput = React.useCallback(
     (type: PossibleClockTypes) => setFocused(type),
@@ -115,9 +91,9 @@ export function TimePickerModal({
   const onChange = React.useCallback(
     (params: {
       focused?: PossibleClockTypes | undefined
-      hours: number
-      minutes: number
-      seconds: number
+      hours?: number
+      minutes?: number
+      seconds?: number
       endHours?: number
       endMinutes?: number
       endSeconds?: number
@@ -207,9 +183,9 @@ export function TimePickerModal({
                   endHours={localEndHours}
                   endMinutes={localEndMinutes}
                   endSeconds={localEndSeconds}
-                  onChange={onChange}
                   onFocusInput={onFocusInput}
                   duration={duration}
+                  onChange={onChange}
                 />
               </View>
               <View style={styles.bottom}>
@@ -251,16 +227,20 @@ export function TimePickerModal({
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getMinutes(minutes: number | undefined | null): number {
   return minutes === undefined || minutes === null
     ? new Date().getMinutes()
     : minutes
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getSeconds(seconds: number | undefined | null): number {
   return seconds === undefined || seconds === null
     ? new Date().getSeconds()
     : seconds
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getHours(hours: number | undefined | null): number {
   return hours === undefined || hours === null ? new Date().getHours() : hours
 }

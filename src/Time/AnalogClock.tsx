@@ -41,10 +41,10 @@ function AnalogClock({
 }: {
   hours: number
   minutes: number
-  seconds: number
-  endHours: any
-  endMinutes: any
-  endSeconds: any
+  seconds?: number
+  endHours?: number
+  endMinutes?: number
+  endSeconds?: number
   focused: PossibleClockTypes
   is24Hour: boolean
   onChange: ({

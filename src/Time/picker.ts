@@ -70,12 +70,12 @@ export interface ITimePickerModalProps {
     endSeconds,
     duration,
   }: {
-    hours: number
-    minutes: number
-    seconds: number
-    endHours?: number | undefined
-    endMinutes?: number | undefined
-    endSeconds?: number | undefined
+    hours?: number
+    minutes?: number
+    seconds?: number
+    endHours?: number
+    endMinutes?: number
+    endSeconds?: number
     duration: number
   }) => any
   animationType?: 'slide' | 'fade' | 'none'

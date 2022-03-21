@@ -48,9 +48,9 @@ function TimeInputs({
   enableEndltStart: boolean
   inputType: PossibleInputTypes
   focused: PossibleClockTypes
-  hours: number
-  minutes: number
-  seconds: number
+  hours?: number
+  minutes?: number
+  seconds?: number
   endHours?: number
   endMinutes?: number
   endSeconds?: number
@@ -65,9 +65,9 @@ function TimeInputs({
     duration,
     focused,
   }: {
-    hours: number
-    minutes: number
-    seconds: number
+    hours?: number
+    minutes?: number
+    seconds?: number
     endHours?: number
     endMinutes?: number
     endSeconds?: number
@@ -145,43 +145,58 @@ function TimeInputs({
         !enableEndltStart &&
         !compareEndTimeMidnight(newEndHours, newEndMinutes, newEndSeconds)
       ) {
-        if (hours === newEndHours && minutes === newEndMinutes) {
-          newEndMinutes = newMinutes
+        if (hours !== undefined && minutes !== undefined) {
+          if (hours === newEndHours && minutes === newEndMinutes) {
+            newEndMinutes = newMinutes
+          }
+          if (
+            hours === newEndHours &&
+            newEndMinutes !== undefined &&
+            newMinutes !== undefined &&
+            minutes > newEndMinutes
+          ) {
+            newEndMinutes = newMinutes
+          }
+          if (
+            hours === newEndHours &&
+            newEndMinutes !== undefined &&
+            newMinutes !== undefined &&
+            minutes > newEndMinutes
+          ) {
+            newEndMinutes = newMinutes + 1
+          }
+          if (
+            hours === newEndHours &&
+            minutes === newEndMinutes &&
+            seconds === newEndSeconds
+          ) {
+            newEndSeconds = seconds + 1
+          }
+          if (
+            hours === newEndHours &&
+            minutes === newEndMinutes &&
+            seconds !== undefined &&
+            newEndSeconds !== undefined &&
+            seconds > newEndSeconds
+          ) {
+            newEndSeconds = newSeconds
+          }
+          if (
+            hours === newEndHours &&
+            minutes === newEndMinutes &&
+            newSeconds !== undefined &&
+            newSeconds > 58
+          ) {
+            newSeconds = 58
+          }
+          if ((hours === 23 && newEndHours === 0) || hours > newEndHours) {
+            newEndHours = hours
+          }
         }
-        if (hours === newEndHours && minutes > newEndMinutes) {
-          newEndMinutes = newMinutes
-        }
-        if (hours === newEndHours && minutes > newEndMinutes) {
-          newEndMinutes = newMinutes + 1
-        }
-        if (
-          hours === newEndHours &&
-          minutes === newEndMinutes &&
-          seconds === newEndSeconds
-        ) {
-          newEndSeconds = seconds + 1
-        }
-        if (
-          hours === newEndHours &&
-          minutes === newEndMinutes &&
-          seconds > newEndSeconds
-        ) {
-          newEndSeconds = newSeconds
-        }
-        if (
-          hours === newEndHours &&
-          minutes === newEndMinutes &&
-          newSeconds > 58
-        ) {
-          newSeconds = 58
-        }
-        if ((hours === 23 && newEndHours === 0) || hours > newEndHours) {
-          newEndHours = hours
-        }
-        if (newEndMinutes > 59) {
+        if (newEndMinutes !== undefined && newEndMinutes > 59) {
           newEndMinutes = 59
         }
-        if (newEndSeconds > 59) {
+        if (newEndSeconds !== undefined && newEndSeconds > 59) {
           newEndSeconds = 59
         }
       }
@@ -235,102 +250,120 @@ function TimeInputs({
           isLandscape && styles.inputContainerLandscape,
         ]}
       >
-        <TimeInput
-          ref={startInput}
-          placeholder={'00'}
-          value={toHourInputFormat(hours, is24Hour)}
-          clockType={clockTypes.hours}
-          pressed={focused === clockTypes.hours}
-          onPress={onFocusInput}
-          inputType={inputType}
-          returnKeyType={'next'}
-          onSubmitEditing={onSubmitStartInput}
-          blurOnSubmit={false}
-          onChanged={(newHoursFromInput) => {
-            let newHours = toHourOutputFormat(
-              newHoursFromInput,
-              hours,
-              is24Hour
-            )
-            if (newHoursFromInput > 23) {
-              newHours = 0
-            }
-            onChange({
-              hours: newHours,
-              minutes,
-              seconds,
-              endHours,
-              endMinutes,
-              endSeconds,
-              duration,
-            })
-          }}
-        />
-        <View style={styles.hoursAndMinutesSeparator}>
-          <View style={styles.spaceDot} />
-          <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
-          <View style={styles.betweenDot} />
-          <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
-          <View style={styles.spaceDot} />
-        </View>
-        <TimeInput
-          ref={endInput}
-          placeholder={'00'}
-          value={minutes}
-          clockType={clockTypes.minutes}
-          pressed={focused === clockTypes.minutes}
-          onPress={onFocusInput}
-          inputType={inputType}
-          onSubmitEditing={onSubmitEndInput}
-          onChanged={(newMinutesFromInput) => {
-            let newMinutes = newMinutesFromInput
-            if (newMinutesFromInput > 59) {
-              newMinutes = 59
-            }
-            onChange({
-              hours,
-              minutes: newMinutes,
-              seconds,
-              endHours,
-              endMinutes,
-              endSeconds,
-              duration,
-            })
-          }}
-        />
-        <View style={styles.hoursAndMinutesSeparator}>
-          <View style={styles.spaceDot} />
-          <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
-          <View style={styles.betweenDot} />
-          <View style={[styles.dot, { backgroundColor: theme.colors.text }]} />
-          <View style={styles.spaceDot} />
-        </View>
-        <TimeInput
-          ref={endInput}
-          placeholder={'00'}
-          value={seconds}
-          clockType={clockTypes.seconds}
-          pressed={focused === clockTypes.seconds}
-          onPress={onFocusInput}
-          inputType={inputType}
-          onSubmitEditing={onSubmitEndInput}
-          onChanged={(newSecondsFromInput) => {
-            let newSeconds = newSecondsFromInput
-            if (newSecondsFromInput > 59) {
-              newSeconds = 59
-            }
-            onChange({
-              hours,
-              minutes,
-              seconds: newSeconds,
-              endHours,
-              endMinutes,
-              endSeconds,
-              duration,
-            })
-          }}
-        />
-        {!is24Hour ? (
+        {hours !== undefined ? (
+          <TimeInput
+            ref={startInput}
+            placeholder={'00'}
+            value={toHourInputFormat(hours, is24Hour)}
+            clockType={clockTypes.hours}
+            pressed={focused === clockTypes.hours}
+            onPress={onFocusInput}
+            inputType={inputType}
+            returnKeyType={'next'}
+            onSubmitEditing={onSubmitStartInput}
+            blurOnSubmit={false}
+            onChanged={(newHoursFromInput) => {
+              let newHours = toHourOutputFormat(
+                newHoursFromInput,
+                hours,
+                is24Hour
+              )
+              if (newHoursFromInput > 23) {
+                newHours = 0
+              }
+              onChange({
+                hours: newHours,
+                minutes,
+                seconds,
+                endHours,
+                endMinutes,
+                endSeconds,
+                duration,
+              })
+            }}
+          />
+        ) : null}
+        {minutes !== undefined ? (
+          <>
+            <View style={styles.hoursAndMinutesSeparator}>
+              <View style={styles.spaceDot} />
+              <View
+                style={[styles.dot, { backgroundColor: theme.colors.text }]}
+              />
+              <View style={styles.betweenDot} />
+              <View
+                style={[styles.dot, { backgroundColor: theme.colors.text }]}
+              />
+              <View style={styles.spaceDot} />
+            </View>
+            <TimeInput
+              ref={endInput}
+              placeholder={'00'}
+              value={minutes}
+              clockType={clockTypes.minutes}
+              pressed={focused === clockTypes.minutes}
+              onPress={onFocusInput}
+              inputType={inputType}
+              onSubmitEditing={onSubmitEndInput}
+              onChanged={(newMinutesFromInput) => {
+                let newMinutes = newMinutesFromInput
+                if (newMinutesFromInput > 59) {
+                  newMinutes = 59
+                }
+                onChange({
+                  hours,
+                  minutes: newMinutes,
+                  seconds,
+                  endHours,
+                  endMinutes,
+                  endSeconds,
+                  duration,
+                })
+              }}
+            />
+          </>
+        ) : null}
+        {seconds !== undefined ? (
+          <>
+            <View style={styles.hoursAndMinutesSeparator}>
+              <View style={styles.spaceDot} />
+              <View
+                style={[styles.dot, { backgroundColor: theme.colors.text }]}
+              />
+              <View style={styles.betweenDot} />
+              <View
+                style={[styles.dot, { backgroundColor: theme.colors.text }]}
+              />
+              <View style={styles.spaceDot} />
+            </View>
+            <TimeInput
+              ref={endInput}
+              placeholder={'00'}
+              value={seconds}
+              clockType={clockTypes.seconds}
+              pressed={focused === clockTypes.seconds}
+              onPress={onFocusInput}
+              inputType={inputType}
+              onSubmitEditing={onSubmitEndInput}
+              onChanged={(newSecondsFromInput) => {
+                let newSeconds = newSecondsFromInput
+                if (newSecondsFromInput > 59) {
+                  newSeconds = 59
+                }
+                onChange({
+                  hours,
+                  minutes,
+                  seconds: newSeconds,
+                  endHours,
+                  endMinutes,
+                  endSeconds,
+                  duration,
+                })
+              }}
+            />
+          </>
+        ) : null}
+        {!is24Hour && hours !== undefined ? (
           <>
             <View style={styles.spaceBetweenInputsAndSwitcher} />
             <AmPmSwitcher hours={hours} onChange={onChangeHours} />
@@ -426,9 +459,7 @@ function TimeInputs({
             />
           </View>
         </>
-      ) : endHours !== undefined &&
-        endMinutes !== undefined &&
-        endSeconds !== undefined ? (
+      ) : endHours !== undefined && endMinutes !== undefined ? (
         <>
           <View style={styles.betweenDot} />
           <View style={styles.labelContainer}>
@@ -466,7 +497,10 @@ function TimeInputs({
                   endHours,
                   is24Hour
                 )
-                if (newEndHoursFromInput > 23 || hours > 23) {
+                if (
+                  newEndHoursFromInput > 23 ||
+                  (hours !== undefined && hours > 23)
+                ) {
                   newEndHours = 0
                 }
                 onChange({
@@ -516,42 +550,49 @@ function TimeInputs({
                 })
               }}
             />
-            <View style={styles.hoursAndMinutesSeparator}>
-              <View style={styles.spaceDot} />
-              <View
-                style={[styles.dot, { backgroundColor: theme.colors.text }]}
-              />
-              <View style={styles.betweenDot} />
-              <View
-                style={[styles.dot, { backgroundColor: theme.colors.text }]}
-              />
-              <View style={styles.spaceDot} />
-            </View>
-            <TimeInput
-              ref={endInput}
-              placeholder={'00'}
-              value={endSeconds}
-              clockType={clockTypes.endSeconds}
-              pressed={focused === clockTypes.endSeconds}
-              onPress={onFocusInput}
-              inputType={inputType}
-              onSubmitEditing={onSubmitEndInput}
-              onChanged={(newEndSecondsFromInput) => {
-                let newEndSeconds = newEndSecondsFromInput
-                if (newEndSecondsFromInput > 59 || seconds > 59) {
-                  newEndSeconds = 59
-                }
-                onChange({
-                  hours,
-                  minutes,
-                  seconds,
-                  endHours,
-                  endMinutes,
-                  endSeconds: newEndSeconds,
-                  duration,
-                })
-              }}
-            />
+            {endSeconds !== undefined ? (
+              <>
+                <View style={styles.hoursAndMinutesSeparator}>
+                  <View style={styles.spaceDot} />
+                  <View
+                    style={[styles.dot, { backgroundColor: theme.colors.text }]}
+                  />
+                  <View style={styles.betweenDot} />
+                  <View
+                    style={[styles.dot, { backgroundColor: theme.colors.text }]}
+                  />
+                  <View style={styles.spaceDot} />
+                </View>
+                <TimeInput
+                  ref={endInput}
+                  placeholder={'00'}
+                  value={endSeconds}
+                  clockType={clockTypes.endSeconds}
+                  pressed={focused === clockTypes.endSeconds}
+                  onPress={onFocusInput}
+                  inputType={inputType}
+                  onSubmitEditing={onSubmitEndInput}
+                  onChanged={(newEndSecondsFromInput) => {
+                    let newEndSeconds = newEndSecondsFromInput
+                    if (
+                      newEndSecondsFromInput > 59 ||
+                      (seconds !== undefined && seconds > 59)
+                    ) {
+                      newEndSeconds = 59
+                    }
+                    onChange({
+                      hours,
+                      minutes,
+                      seconds,
+                      endHours,
+                      endMinutes,
+                      endSeconds: newEndSeconds,
+                      duration,
+                    })
+                  }}
+                />
+              </>
+            ) : null}
             {!is24Hour && endHours ? (
               <>
                 <View style={styles.spaceBetweenInputsAndSwitcher} />

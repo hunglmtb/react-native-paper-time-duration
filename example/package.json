@@ -21,7 +21,6 @@
     "@formatjs/intl-locale": "^2.3.6",
     "@formatjs/intl-numberformat": "^5.6.1",
     "@formatjs/intl-pluralrules": "^3.4.6",
-    "@formatjs/intl-relativetimeformat": "^7.2.6",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-native": "0.63.2",
