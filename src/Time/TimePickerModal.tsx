@@ -83,6 +83,23 @@ export function TimePickerModal({
   React.useEffect(() => setLocalEndMinutes(endMinutes), [endMinutes])
   React.useEffect(() => setLocalEndSeconds(endSeconds), [endSeconds])
   React.useEffect(() => setLocalDuration(duration || 0), [duration])
+  React.useEffect(() => {
+    if (
+      (localHours === undefined && focused === clockTypes.hours) ||
+      (localMinutes === undefined && focused === clockTypes.minutes) ||
+      (localSeconds === undefined && focused === clockTypes.seconds)
+    ) {
+      if (localEndHours !== undefined) setFocused(clockTypes.endHours)
+      else if (localEndMinutes !== undefined) setFocused(clockTypes.endMinutes)
+    }
+  }, [
+    localHours,
+    localMinutes,
+    localSeconds,
+    localEndHours,
+    localEndMinutes,
+    focused,
+  ])
 
   const onFocusInput = React.useCallback(
     (type: PossibleClockTypes) => setFocused(type),
@@ -122,6 +139,7 @@ export function TimePickerModal({
       setLocalDuration,
     ]
   )
+
   return (
     <Modal
       animationType={animationType}

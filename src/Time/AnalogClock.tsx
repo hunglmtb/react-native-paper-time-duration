@@ -160,9 +160,7 @@ function AnalogClock({
             endSeconds: endSecondsRef.current,
           })
         }
-      }
-
-      if (focusedRef.current === clockTypes.endHours) {
+      } else if (focusedRef.current === clockTypes.endHours) {
         let hours24 = is24HourRef.current
         let previousHourType = getHourType(endHoursRef.current)
         let pickedHours = getHours(angle, previousHourType)
@@ -205,7 +203,9 @@ function AnalogClock({
             endMinutes: pickedEndMinutes,
             endSeconds: endSecondsRef.current,
             focused:
-              typeof final === 'string' && final === clockTypes.endMinutes
+              endSecondsRef.current !== undefined &&
+              typeof final === 'string' &&
+              final === clockTypes.endMinutes
                 ? clockTypes.endSeconds
                 : undefined,
           })

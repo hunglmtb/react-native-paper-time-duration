@@ -230,7 +230,7 @@ function TimeInputs({
   ])
 
   return (
-    <View style={[styles.columnContainer]}>
+    <View style={[styles.columnContainer, styles.alignItemsBaseline]}>
       <View style={styles.labelContainer}>
         <Text
           selectable={false}
@@ -615,6 +615,9 @@ const styles = StyleSheet.create({
   columnContainer: {
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  alignItemsBaseline: {
+    alignItems: 'baseline',
   },
   inputContainerLandscape: {
     flex: 1,
