@@ -66,7 +66,7 @@ export function TimePickerModal({
   }, [pickerType])
 
   const [focused, setFocused] = React.useState<PossibleClockTypes>(
-    clockTypes.hours
+    hours !== undefined ? clockTypes.hours : clockTypes.endHours
   )
   const [localHours, setLocalHours] = React.useState(hours)
   const [localMinutes, setLocalMinutes] = React.useState(minutes)
