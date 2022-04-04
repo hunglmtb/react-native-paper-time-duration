@@ -126,11 +126,15 @@ function TimePicker({
         duration={duration}
       />
       {inputType === inputTypes.picker &&
-      hours !== undefined &&
-      minutes !== undefined ? (
+      ((hours !== undefined && minutes !== undefined) ||
+        (endHours !== undefined && endMinutes !== undefined)) ? (
         <View style={styles.clockContainer}>
           <AnalogClock
-            hours={toHourInputFormat(hours, is24Hour)}
+            hours={
+              hours !== undefined
+                ? toHourInputFormat(hours, is24Hour)
+                : undefined
+            }
             minutes={minutes}
             seconds={seconds}
             endHours={
