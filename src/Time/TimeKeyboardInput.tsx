@@ -85,6 +85,11 @@ function TimeKeyboardInput({
     number | undefined
   >(turnOffTime)
 
+  // React.useEffect(() => setCurrentAfterSecond(afterSecond), [afterSecond])
+  // React.useEffect(() => setCurrentDuration(turnOffTime), [duration])
+  React.useEffect(() => setCurrentTurnOnTime(turnOnTime), [turnOnTime])
+  React.useEffect(() => setCurrentTurnOffTime(turnOffTime), [turnOffTime])
+
   React.useEffect(() => {
     let newCurrentAfterSecond = currentAfterSecond
     let newCurrentDuration = currentDuration
@@ -134,7 +139,7 @@ function TimeKeyboardInput({
   return (
     <View style={styles.container}>
       <View style={[styles.inputContainer]}>
-        {afterSecond !== undefined ? (
+        {currentAfterSecond !== undefined ? (
           <View>
             <View
               style={[

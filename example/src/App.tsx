@@ -89,7 +89,7 @@ function App({
     duration?: number | undefined;
     turnOnTime: number | undefined;
     turnOffTime: number | undefined;
-  }>({ afterSecond: 0, duration: 128, turnOnTime: 12, turnOffTime: 12 });
+  }>({ afterSecond: 12, duration: 128, turnOnTime: undefined, turnOffTime: undefined });
   const [timeOpen, setTimeOpen] = React.useState(false);
   const [rangeOpen, setRangeOpen] = React.useState(false);
   const [rangeExcludeOpen, setRangeExcludeOpen] = React.useState(false);
@@ -97,6 +97,10 @@ function App({
   const [singleOpen, setSingleOpen] = React.useState(false);
   const [customOpen, setCustomOpen] = React.useState(false);
   const [timeKeyboardOpen, setTimeKeyboardOpen] = React.useState(false);
+
+  const [useCycle, setUseCycle] = useState(false)
+
+
   const onDismissTime = React.useCallback(() => {
     setTimeOpen(false);
   }, [setTimeOpen]);
@@ -157,6 +161,7 @@ function App({
     ({ afterSecond, duration, turnOnTime, turnOffTime }) => {
       setTimeKeyboardOpen(false);
       setTimeKeyboard({ afterSecond, duration, turnOnTime, turnOffTime });
+      console.log('{ afterSecond, duration, turnOnTime, turnOffTime }', { afterSecond, duration, turnOnTime, turnOffTime })
     },
     [setTimeKeyboardOpen, setTimeKeyboard]
   );
@@ -461,14 +466,20 @@ function App({
         turnOnTime={timeKeyboard.turnOnTime}
         turnOffTime={timeKeyboard.turnOffTime}
         textDurationUp={
-          <View>Sau</View>
+          <View>Thời lương</View>
         }
-        minDuration={2}
+        textAfterSecondUp={
+          <View>Sau so giay</View>
+        }
+        minDuration={1}
         maxDuration={128}
-        minAfterSeconds={56}
+        minAfterSeconds={0}
         maxAfterSeconds={256}
         footerLeft={
-          <Switch value={dark} onValueChange={onToggleDarkMode} />
+          <><Switch value={dark} onValueChange={onToggleDarkMode} /><Switch value={useCycle} onValueChange={(checked)=> {
+            setUseCycle(checked)
+            setTimeKeyboard({ ...timeKeyboard, turnOnTime: (checked?60: undefined), turnOffTime: (checked?60: undefined) });
+          }} /></>
         }
       />
     </>
